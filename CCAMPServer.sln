@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2016
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CCAMPServer", "CCAMPServer\CCAMPServer.csproj", "{C0373DA6-0279-402E-91EE-F710C43FB76A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CCAMPServerModel", "CCAMPServerModel\CCAMPServerModel.csproj", "{7A35EE5C-279F-4604-B561-23CE1361AEBA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CCAMPServerTest", "CCAMPServerTest\CCAMPServerTest.csproj", "{EDF817AF-E0F9-45C9-99AC-7FD8646ED4BA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C0373DA6-0279-402E-91EE-F710C43FB76A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C0373DA6-0279-402E-91EE-F710C43FB76A}.Debug|x64.Build.0 = Debug|Any CPU
+		{C0373DA6-0279-402E-91EE-F710C43FB76A}.Release|x64.ActiveCfg = Release|Any CPU
+		{C0373DA6-0279-402E-91EE-F710C43FB76A}.Release|x64.Build.0 = Release|Any CPU
+		{7A35EE5C-279F-4604-B561-23CE1361AEBA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7A35EE5C-279F-4604-B561-23CE1361AEBA}.Debug|x64.Build.0 = Debug|Any CPU
+		{7A35EE5C-279F-4604-B561-23CE1361AEBA}.Release|x64.ActiveCfg = Release|Any CPU
+		{7A35EE5C-279F-4604-B561-23CE1361AEBA}.Release|x64.Build.0 = Release|Any CPU
+		{EDF817AF-E0F9-45C9-99AC-7FD8646ED4BA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EDF817AF-E0F9-45C9-99AC-7FD8646ED4BA}.Debug|x64.Build.0 = Debug|Any CPU
+		{EDF817AF-E0F9-45C9-99AC-7FD8646ED4BA}.Release|x64.ActiveCfg = Release|Any CPU
+		{EDF817AF-E0F9-45C9-99AC-7FD8646ED4BA}.Release|x64.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {23BEC2D5-0CDB-4BA8-918D-FD91CA96B5C1}
+	EndGlobalSection
+EndGlobal
