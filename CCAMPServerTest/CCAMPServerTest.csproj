@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <RootNamespace>CCAMP_ServerTest</RootNamespace>
+    <RootNamespace>CCAMPServerTest</RootNamespace>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
