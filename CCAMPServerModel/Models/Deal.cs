@@ -13,5 +13,11 @@ namespace CCAMPServerModel.Models
 
         [Required]
         public Guid Guid { get; set; }
+
+        [Required]
+        public Campaign campaign { get; set; }
+
+        [Required]
+        public ContentCreator contentCreator { get; set; }
     }
 }

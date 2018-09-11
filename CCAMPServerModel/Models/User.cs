@@ -20,6 +20,9 @@ namespace CCAMPServerModel.Models
         public String AuthToken { get; set; }
 
         [Required]
+        public Boolean Status { get; set; }
+
+        [Required]
         public DateTime CreationDate { get; set; }
     }
 }
