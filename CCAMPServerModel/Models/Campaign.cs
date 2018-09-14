@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace CCAMPServerModel.Models
@@ -22,6 +23,11 @@ namespace CCAMPServerModel.Models
         
         public DateTime EndDate { get; set; }
 
+        [ForeignKey("SponsorId")]
+        public Sponsor Sponsor { get; set; }
+
         public List<Advertisement> AdvertisementList { get; set; }
+
+        public List<Deal> DealList { get; set; }
     }
 }

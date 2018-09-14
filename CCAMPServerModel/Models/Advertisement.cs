@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace CCAMPServerModel.Models
@@ -22,5 +23,10 @@ namespace CCAMPServerModel.Models
 
         [Required]
         public String StorageURLMediaPath { get; set; }
+
+        [ForeignKey("CampaignId")]
+        public Campaign Campaign { get; set; }
+
+        public List<Transaction> TransactionList { get; set; }
     }
 }

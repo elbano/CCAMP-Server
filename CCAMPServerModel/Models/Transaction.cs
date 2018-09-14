@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace CCAMPServerModel.Models
@@ -17,10 +18,10 @@ namespace CCAMPServerModel.Models
         [Required]
         public DateTime CreationDate { get; set; }
 
-        [Required]
+        [ForeignKey("ContentId")]
         public Content Content { get; set; }
 
-        [Required]
+        [ForeignKey("AdvertisementId")]
         public Advertisement Advertisement { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace CCAMPServerModel.Models
@@ -14,10 +15,10 @@ namespace CCAMPServerModel.Models
         [Required]
         public Guid Guid { get; set; }
 
-        [Required]
-        public Campaign campaign { get; set; }
+        [ForeignKey("CampaignId")]
+        public Campaign Campaign { get; set; }
 
-        [Required]
-        public ContentCreator contentCreator { get; set; }
+        [ForeignKey("ContentCreatorId")]
+        public ContentCreator ContentCreator { get; set; }
     }
 }
