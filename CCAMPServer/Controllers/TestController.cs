@@ -13,7 +13,7 @@ namespace CCAMPServer.Controllers
     [ApiController]
     public class TestController : Controller
     {
-        private static ILogger log { get; } = ApplicationLogging.Logger;
+        private static ILogger log { get; } = ApplicationLogging.Logger.ForContext<TestController>();
         // GET: api/<controller>
         [HttpGet]
         public IEnumerable<string> Get()

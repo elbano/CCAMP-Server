@@ -30,6 +30,7 @@ namespace CCAMPServer
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             var rootConnectionStr = String.Format(Configuration.GetConnectionString("RootConnection"), Environment.MachineName);
+            var TransactionalConnectionStr = String.Format(Configuration.GetConnectionString("TransactionalConnection"), Environment.MachineName);
 
             // Add EF support for SqlServer
             services.AddEntityFrameworkSqlServer();
@@ -37,6 +38,7 @@ namespace CCAMPServer
             services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(rootConnectionStr));
 
             DBContextFactory.AddConnectionString(DBContextFactory.ROOT, rootConnectionStr);
+            DBContextFactory.AddConnectionString(DBContextFactory.TRANSACTION, TransactionalConnectionStr);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
