@@ -14,9 +14,9 @@ namespace CCAMPServer.Controllers
     [ApiController]
     public class ContentsController : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
+        private readonly TransactionDBContext _context;
 
-        public ContentsController(ApplicationDBContext context)
+        public ContentsController(TransactionDBContext context)
         {
             _context = context;
         }

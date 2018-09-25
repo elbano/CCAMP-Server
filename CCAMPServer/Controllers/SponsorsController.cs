@@ -14,9 +14,9 @@ namespace CCAMPServer.Controllers
     [ApiController]
     public class SponsorsController : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
+        private readonly TransactionDBContext _context;
 
-        public SponsorsController(ApplicationDBContext context)
+        public SponsorsController(TransactionDBContext context)
         {
             _context = context;
         }

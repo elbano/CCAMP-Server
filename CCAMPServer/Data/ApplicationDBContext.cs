@@ -28,4 +28,14 @@ namespace CCAMPServer.Data
         }
         #endregion Constructor
     }
+
+    public class TransactionDBContext : ApplicationDBContext
+    {
+        #region Constructor
+        public TransactionDBContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
+        {
+
+        }
+        #endregion Constructor
+    }
 }

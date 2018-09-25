@@ -14,9 +14,9 @@ namespace CCAMPServer.Controllers
     [ApiController]
     public class SupportUsersController : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
+        private readonly TransactionDBContext _context;
 
-        public SupportUsersController(ApplicationDBContext context)
+        public SupportUsersController(TransactionDBContext context)
         {
             _context = context;
         }

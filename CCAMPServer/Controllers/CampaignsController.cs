@@ -14,9 +14,9 @@ namespace CCAMPServer.Controllers
     [ApiController]
     public class CampaignsController : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
+        private readonly TransactionDBContext _context;
 
-        public CampaignsController(ApplicationDBContext context)
+        public CampaignsController(TransactionDBContext context)
         {
             _context = context;
         }

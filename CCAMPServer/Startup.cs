@@ -33,15 +33,13 @@ namespace CCAMPServer
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             var rootConnectionStr = String.Format(Configuration.GetConnectionString("RootConnection"), Environment.MachineName);
-            var TransactionalConnectionStr = String.Format(Configuration.GetConnectionString("TransactionalConnection"), Environment.MachineName);
+            var transactionalConnectionStr = String.Format(Configuration.GetConnectionString("TransactionalConnection"), Environment.MachineName);
 
             // Add EF support for SqlServer
             services.AddEntityFrameworkSqlServer();
             // Add ApplicationDBContext
-            services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(rootConnectionStr));
-
-            DBContextFactory.AddConnectionString(DBContextFactory.ROOT, rootConnectionStr);
-            DBContextFactory.AddConnectionString(DBContextFactory.TRANSACTION, TransactionalConnectionStr);
+            services.AddDbContextPool<ApplicationDBContext>(options => options.UseSqlServer(rootConnectionStr), 6);
+            services.AddDbContextPool<TransactionDBContext>(options => options.UseSqlServer(transactionalConnectionStr), 64);
 
             environmentPolicy = Configuration.GetValue<String>("EnvironmentPolicy");
 

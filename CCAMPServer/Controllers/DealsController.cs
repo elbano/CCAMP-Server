@@ -14,9 +14,9 @@ namespace CCAMPServer.Controllers
     [ApiController]
     public class DealsController : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
+        private readonly TransactionDBContext _context;
 
-        public DealsController(ApplicationDBContext context)
+        public DealsController(TransactionDBContext context)
         {
             _context = context;
         }

@@ -14,9 +14,9 @@ namespace CCAMPServer.Controllers
     [ApiController]
     public class ContentCreatorsController : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
+        private readonly TransactionDBContext _context;
 
-        public ContentCreatorsController(ApplicationDBContext context)
+        public ContentCreatorsController(TransactionDBContext context)
         {
             _context = context;
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using CCAMPServer.Data;
@@ -17,73 +18,68 @@ namespace CCAMPServer.Controllers
     public class ChannelController : ControllerBase
     {
         private static ILogger log { get; } = ApplicationLogging.Logger.ForContext<ChannelController>();
+        private readonly TransactionDBContext _context;
+
+        public ChannelController(TransactionDBContext context)
+        {
+            _context = context;
+        }
+
         // GET: api/Channels
         [HttpGet]
         public IEnumerable<Channel> GetChannel()
         {
-            using (var dbContext = DBContextFactory.Create(DBContextFactory.TRANSACTION))
-            {
-                return dbContext.Channel;
-            }
+            return _context.Channel;
         }
 
         // GET: api/Channels/5
-        [HttpGet("{guid}")]
-        public async Task<IActionResult> GetChannel([FromRoute] Guid guid)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetChannel([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
-                log.Warning("BadRequest");
                 return BadRequest(ModelState);
             }
 
-            using (var dbContext = DBContextFactory.Create(DBContextFactory.TRANSACTION))
+            var channel = await _context.Channel.FindAsync(id);
+
+            if (channel == null)
             {
-                var channel = await dbContext.Channel.FindAsync(guid);
-
-                if (channel == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(channel);
+                return NotFound();
             }
+
+            return Ok(channel);
         }
 
         // PUT: api/Channels/5
-        [HttpPut("{guid}")]
-        public async Task<IActionResult> PutChannel([FromRoute] Guid guid, [FromBody] Channel channel)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutChannel([FromRoute] int id, [FromBody] Channel channel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (!guid.Equals(channel.Guid))
+            if (id != channel.Id)
             {
                 return BadRequest();
             }
 
-            using (var dbContext = DBContextFactory.Create(DBContextFactory.TRANSACTION))
-            {
-                dbContext.Entry(channel).State = EntityState.Modified;
+            _context.Entry(channel).State = EntityState.Modified;
 
-                try
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ChannelExists(id))
                 {
-                    await dbContext.SaveChangesAsync();
+                    return NotFound();
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!ChannelExists(guid, dbContext))
-                    {
-                        log.Warning("NotFound");
-                        return NotFound();
-                    }
-                    else
-                    {
-                        log.Warning("throw");
-                        throw;
-                    }
+                    throw;
                 }
             }
 
@@ -99,42 +95,36 @@ namespace CCAMPServer.Controllers
                 return BadRequest(ModelState);
             }
 
-            using (var dbContext = DBContextFactory.Create(DBContextFactory.TRANSACTION))
-            {
-                dbContext.Channel.Add(channel);
-                await dbContext.SaveChangesAsync();
-            }
+            _context.Channel.Add(channel);
+            await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetChannel", new { id = channel.Id }, channel);
         }
 
         // DELETE: api/Channels/5
-        [HttpDelete("{guid}")]
-        public async Task<IActionResult> DeleteChannel([FromRoute] Guid guid)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteChannel([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            using (var dbContext = DBContextFactory.Create(DBContextFactory.TRANSACTION))
+            var channel = await _context.Channel.FindAsync(id);
+            if (channel == null)
             {
-                var channel = await dbContext.Channel.FindAsync(guid);
-                if (channel == null)
-                {
-                    return NotFound();
-                }
-
-                dbContext.Channel.Remove(channel);
-                await dbContext.SaveChangesAsync();
+                return NotFound();
             }
 
-            return NoContent();
+            _context.Channel.Remove(channel);
+            await _context.SaveChangesAsync();
+
+            return Ok(channel);
         }
 
-        private bool ChannelExists(Guid guid, ApplicationDBContext dbContext)
+        private bool ChannelExists(int id)
         {
-            return dbContext.Channel.Any(e => e.Guid.Equals(guid));
+            return _context.Channel.Any(e => e.Id == id);
         }
     }
 }

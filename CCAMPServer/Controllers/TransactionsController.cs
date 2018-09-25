@@ -17,73 +17,68 @@ namespace CCAMPServer.Controllers
     {
         private static ILogger log { get; } = ApplicationLogging.Logger.ForContext<TransactionsController>();
 
+        private readonly TransactionDBContext _context;
+
+        public TransactionsController(TransactionDBContext context)
+        {
+            _context = context;
+        }
+
         // GET: api/Transactions
         [HttpGet]
         public IEnumerable<Transaction> GetTransaction()
         {
-            using (var dbContext = DBContextFactory.Create(DBContextFactory.TRANSACTION))
-            {
-                return dbContext.Transaction;
-            }
+            return _context.Transaction;
         }
 
         // GET: api/Transactions/5
-        [HttpGet("{guid}")]
-        public async Task<IActionResult> GetTransaction([FromRoute] Guid guid)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetTransaction([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
-                log.Warning("BadRequest");
                 return BadRequest(ModelState);
             }
 
-            using (var dbContext = DBContextFactory.Create(DBContextFactory.TRANSACTION))
+            var transaction = await _context.Transaction.FindAsync(id);
+
+            if (transaction == null)
             {
-                var transaction = await dbContext.Transaction.FindAsync(guid);
-
-                if (transaction == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(transaction);
+                return NotFound();
             }
+
+            return Ok(transaction);
         }
 
         // PUT: api/Transactions/5
-        [HttpPut("{guid}")]
-        public async Task<IActionResult> PutTransaction([FromRoute] Guid guid, [FromBody] Transaction transaction)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutTransaction([FromRoute] int id, [FromBody] Transaction transaction)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (!guid.Equals(transaction.Guid))
+            if (id != transaction.Id)
             {
                 return BadRequest();
             }
 
-            using (var dbContext = DBContextFactory.Create(DBContextFactory.TRANSACTION))
-            {
-                dbContext.Entry(transaction).State = EntityState.Modified;
+            _context.Entry(transaction).State = EntityState.Modified;
 
-                try
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!TransactionExists(id))
                 {
-                    await dbContext.SaveChangesAsync();
+                    return NotFound();
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!TransactionExists(guid, dbContext))
-                    {
-                        log.Warning("NotFound");
-                        return NotFound();
-                    }
-                    else
-                    {
-                        log.Warning("throw");
-                        throw;
-                    }
+                    throw;
                 }
             }
 
@@ -99,42 +94,36 @@ namespace CCAMPServer.Controllers
                 return BadRequest(ModelState);
             }
 
-            using (var dbContext = DBContextFactory.Create(DBContextFactory.TRANSACTION))
-            {
-                dbContext.Transaction.Add(transaction);
-                await dbContext.SaveChangesAsync();
-            }
+            _context.Transaction.Add(transaction);
+            await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetTransaction", new { id = transaction.Id }, transaction);
         }
 
         // DELETE: api/Transactions/5
-        [HttpDelete("{guid}")]
-        public async Task<IActionResult> DeleteTransaction([FromRoute] Guid guid)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTransaction([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            using (var dbContext = DBContextFactory.Create(DBContextFactory.TRANSACTION))
+            var transaction = await _context.Transaction.FindAsync(id);
+            if (transaction == null)
             {
-                var transaction = await dbContext.Transaction.FindAsync(guid);
-                if (transaction == null)
-                {
-                    return NotFound();
-                }
-
-                dbContext.Transaction.Remove(transaction);
-                await dbContext.SaveChangesAsync();
+                return NotFound();
             }
 
-            return NoContent();
+            _context.Transaction.Remove(transaction);
+            await _context.SaveChangesAsync();
+
+            return Ok(transaction);
         }
 
-        private bool TransactionExists(Guid guid, ApplicationDBContext dbContext)
+        private bool TransactionExists(int id)
         {
-            return dbContext.Transaction.Any(e => e.Guid.Equals(guid));
+            return _context.Transaction.Any(e => e.Id == id);
         }
     }
 }
