@@ -6,9 +6,8 @@ using System.Text;
 
 namespace CCAMPServerModel.Models
 {
-    public class Content
+    public class Channel
     {
-        [Key]
         [Required]
         public int Id { get; set; }
 
@@ -16,14 +15,16 @@ namespace CCAMPServerModel.Models
         public Guid Guid { get; set; }
 
         [Required]
-        public String Title { get; set; }
+        public String Name { get; set; }
 
         [Required]
-        public String URLMediaPath { get; set; }
+        public DateTime CreationDate { get; set; }
 
-        [ForeignKey("ChannelId")]
-        public Channel Channel { get; set; }
+        [ForeignKey("ContentCreatorId")]
+        public ContentCreator ContentCreator { get; set; }
 
-        public List<Transaction> TransactionList { get; set; }
+        public List<Content> ContentList { get; set; }
+
+        public List<Deal> DealList { get; set; }
     }
 }

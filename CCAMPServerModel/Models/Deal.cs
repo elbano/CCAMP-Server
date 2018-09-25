@@ -18,7 +18,7 @@ namespace CCAMPServerModel.Models
         [ForeignKey("CampaignId")]
         public Campaign Campaign { get; set; }
 
-        [ForeignKey("ContentCreatorId")]
-        public ContentCreator ContentCreator { get; set; }
+        [ForeignKey("ChannelId")]
+        public Channel Channel { get; set; }
     }
 }

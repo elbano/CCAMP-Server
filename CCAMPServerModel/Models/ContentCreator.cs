@@ -19,8 +19,6 @@ namespace CCAMPServerModel.Models
 
         public String CompanyName { get; set; }
 
-        public List<Content> ContentList { get; set; }
-
-        public List<Deal> DealList { get; set; }
+        public List<Channel> ChannelList { get; set; }
     }
 }
