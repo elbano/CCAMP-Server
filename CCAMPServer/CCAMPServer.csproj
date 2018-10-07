@@ -9,7 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotNetOpenAuth" Version="4.3.4.13329" />
     <PackageReference Include="Google.Apis.Youtube.v3" Version="1.35.2.1226" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.1.1" />

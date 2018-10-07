@@ -1,29 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Auth.OAuth2.Responses;
-using Google.Apis.Auth.OAuth2.Flows;
 using Google.Apis.Util.Store;
-using Google.Apis.Services;
 using Google.Apis.YouTube.v3;
-using Google.Apis.YouTube.v3.Data;
-using System.Net;
 using Newtonsoft.Json;
-using System.IO;
-using System.Net;
 using System.Net.Http;
-using System.Web;
-using System.Text;
 using CCAMPServer.Data;
 using System.Threading;
-using RestSharp;
 using System.Net.Http.Headers;
-using DotNetOpenAuth.OAuth2;
-using Google.Apis.Util;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
