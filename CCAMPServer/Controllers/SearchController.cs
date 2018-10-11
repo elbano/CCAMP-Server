@@ -17,7 +17,7 @@ namespace CCAMPServer.Controllers
         {
             using (var client = new HttpClient())
             {
-                var search = string.Format(Constants.API.YOUTUBE_SEARCH, $"part=snippet&q=YouTube+Data+API&type=video&videoCaption=closedCaption&key={Constants.API.YOUTUBE_API_KEY}");
+                var search = string.Format(Constants.API.YOUTUBE_SEARCH, $"&q=YouTube+Data+API&type=video&videoCaption=closedCaption&key={Constants.API.YOUTUBE_API_KEY}");
                 var request = string.Format(Constants.API.YOUTUBE_BASE_REQUEST,search);
 
 
