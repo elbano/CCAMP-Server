@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
+using Serilog;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,36 +16,29 @@ namespace CCAMPServer.Controllers
     [ApiController]
     public class LogController : Controller
     {
-        // GET: api/<controller>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
+        private static ILogger log { get; } = ApplicationLogging.Logger.ForContext<LogController>();
 
-        // GET api/<controller>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
+        /// <summary>
+        /// Recieves logger json from component and writes into log
+        /// </summary>
+        /// <param name="loggerJson"></param>
+        /// <returns></returns>
         // POST api/<controller>
-        [HttpPost]
-        public void Post([FromBody]string value)
+        [HttpPost, AllowAnonymous]
+        public IActionResult Post([FromBody]JObject loggerJson)
         {
-        }
-
-        // PUT api/<controller>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            try
+            {
+                Debug.WriteLine(loggerJson);
+                log.Information(loggerJson.ToString());
+                return Ok();
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception);
+                log.Error(exception, exception.Message);
+                return new JsonResult("");
+            }
         }
     }
 }
