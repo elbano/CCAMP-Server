@@ -20,6 +20,15 @@ namespace CCAMPServerTest
         }
 
 
+        [Fact]
+        public void CallGetSearchAPI()
+        {
+            var searchController = new SearchController();
+            var response = searchController.GetSearchParameters();
+
+            Assert.NotEqual(response, string.Empty);
+        }
+
     }
 }
 

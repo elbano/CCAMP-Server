@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using CCAMPServer.Classes;
 using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace CCAMPServer.Controllers
 {
@@ -12,7 +13,7 @@ namespace CCAMPServer.Controllers
     [ApiController]
     public class SearchController : Controller
     {
-        [HttpGet]
+        [HttpPost]
         public string Search()
         {
             using (var client = new HttpClient())
@@ -27,6 +28,12 @@ namespace CCAMPServer.Controllers
                 return responseContent.Result.ToString();
 
             }
+        }
+
+        [HttpGet("GetSearchParameters")]
+        public string GetSearchParameters()
+        {
+            return JsonConvert.SerializeObject(new SearchParameters(), Formatting.Indented, new ConverterClassDefToJSON(typeof(SearchParameters)));
         }
 
     }
