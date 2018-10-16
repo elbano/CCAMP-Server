@@ -14,6 +14,7 @@ namespace CCAMPServer.Classes
             public const string TOKEN_URI = "https://www.googleapis.com/oauth2/v4/token";
 
             public const string YOUTUBE_SEARCH = "search?part=snippet{0}";
+            public const string YOUTUBE_KEY_PARAM = "{0}&key={1}";
         }
 
         

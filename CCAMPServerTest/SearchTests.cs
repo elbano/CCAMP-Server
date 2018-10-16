@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 using CCAMPServer.Controllers;
+using CCAMPServer.Classes;
+using Newtonsoft;
 
 
 namespace CCAMPServerTest
@@ -11,21 +13,24 @@ namespace CCAMPServerTest
     {
 
         [Fact]
-        public void CallSearchAPI()
+        public void CallGetSearchAPI()
         {
             var searchController = new SearchController();
-            var response = searchController.Search();
+            var response = searchController.GetSearchParameters();
 
             Assert.NotEqual(response, string.Empty);
         }
 
 
         [Fact]
-        public void CallGetSearchAPI()
+        public void CallSearchAPIWithObject()
         {
             var searchController = new SearchController();
-            var response = searchController.GetSearchParameters();
+            var searchParam = new SearchParameters();
+            searchParam.maxResults = 25;
+            searchParam.q = "Attack";
 
+            var response = searchController.Search(searchParam);
             Assert.NotEqual(response, string.Empty);
         }
 

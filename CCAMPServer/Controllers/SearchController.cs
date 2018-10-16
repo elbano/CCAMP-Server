@@ -14,26 +14,25 @@ namespace CCAMPServer.Controllers
     public class SearchController : Controller
     {
         [HttpPost]
-        public string Search()
+        public string Search([FromBody]SearchParameters queryParams )
         {
+            if (string.IsNullOrWhiteSpace(queryParams.ToString()))
+                return null;
+
             using (var client = new HttpClient())
             {
-                var search = string.Format(Constants.API.YOUTUBE_SEARCH, $"&q=YouTube+Data+API&type=video&videoCaption=closedCaption&key={Constants.API.YOUTUBE_API_KEY}");
-                var request = string.Format(Constants.API.YOUTUBE_BASE_REQUEST,search);
-
-
-                var response = client.GetAsync(request);
+                var response = client.GetAsync(CommonFunctions.FormatSearchQuery(queryParams.ToString()));
                 var responseContent = response.Result.Content.ReadAsStringAsync();
 
                 return responseContent.Result.ToString();
-
             }
+
         }
 
         [HttpGet("GetSearchParameters")]
         public string GetSearchParameters()
         {
-            return JsonConvert.SerializeObject(new SearchParameters(), Formatting.Indented, new ConverterClassDefToJSON(typeof(SearchParameters)));
+            return JsonConvert.SerializeObject(new SearchQueryParameters(), Formatting.Indented, new ConverterClassDefToJSON(typeof(SearchQueryParameters)));
         }
 
     }

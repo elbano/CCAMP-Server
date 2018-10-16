@@ -18,7 +18,6 @@ namespace CCAMPServer.Classes
             _types = types;
         }
 
-
         public override bool CanRead
         {
             get { return false; }
@@ -44,7 +43,7 @@ namespace CCAMPServer.Classes
             }
             else
             {
-                var currValue = value as SearchParameters;
+                var currValue = value as SearchQueryParameters;
 
                 var innerClasses = currValue.GetType().GetNestedTypes(BindingFlags.Public);
 
@@ -61,7 +60,6 @@ namespace CCAMPServer.Classes
                 jsonOject.WriteTo(writer);
             }
         }
-
 
         private static void GetData(Type type, List<JObject> lstJObjects)
         {
@@ -86,8 +84,6 @@ namespace CCAMPServer.Classes
                 }
             }
         }
-
-
 
         /// <summary>
         /// Return all the values of constants of the specified type

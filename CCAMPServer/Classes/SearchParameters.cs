@@ -1,134 +1,113 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace CCAMPServer.Classes
 {
-    
     public class SearchParameters
     {
-        public static class OptionalParametersJustOne
+        #region OneOrNonParamters
+        [CCAMAttribute("forContentOwner")]
+        public bool? forContentOwner { get; set; } = null;
+
+        [CCAMAttribute("forDeveloper")]
+        public bool? forDeveloper { get; set; } = null;
+
+        [CCAMAttribute("forMine")]
+        public bool? forMine { get; set; } = null;
+
+        [CCAMAttribute("relatedToVideoId")]
+        public string relatedToVideoId { get; set; } = null;
+
+        #endregion
+
+        #region OptionalParameters
+        [CCAMAttribute("channelId")]
+        public string channelId { get; set; } = null;
+
+        [CCAMAttribute("channelType")]
+        public string channelType { get; set; } = null;
+
+        [CCAMAttribute("eventType")]
+        public string eventType { get; set; } = null;
+
+        [CCAMAttribute("location")]
+        public string location { get; set; } = null;
+
+        [CCAMAttribute("locationRadius")]
+        public string locationRadius { get; set; } = null;
+
+        [CCAMAttribute("maxResults")]
+        public int maxResults { get; set; } = 5;
+
+        [CCAMAttribute("order")]
+        public string order { get; set; } = null;
+
+        [CCAMAttribute("pageToken")]
+        public string pageToken { get; set; } = null;
+
+        [CCAMAttribute("publishedAfter")]
+        public DateTime? publishedAfter { get; set; } = null;
+
+        [CCAMAttribute("publishedBefore")]
+        public DateTime? publishedBefore { get; set; } = null;
+
+        [CCAMAttribute("q")]
+        public string q { get; set; } = null;
+
+        [CCAMAttribute("regionCode")]
+        public string regionCode { get; set; } = null;
+
+        [CCAMAttribute("relevanceLanguage")]
+        public string relevanceLanguage { get; set; } = null;
+
+        [CCAMAttribute("safeSearch")]
+        public string safeSearch { get; set; } = null;
+
+        [CCAMAttribute("topicId")]
+        public string topicId { get; set; } = null;
+
+        [CCAMAttribute("type")]
+        public string type { get; set; } = null;
+
+        [CCAMAttribute("videoCaption")]
+        public string videoCaption { get; set; } = null;
+
+        [CCAMAttribute("videoCategoryId")]
+        public string videoCategoryId { get; set; } = null;
+
+        [CCAMAttribute("videoDefinition")]
+        public string videoDefinition { get; set; } = null;
+
+        [CCAMAttribute("videoDimension")]
+        public string videoDimension { get; set; } = null;
+
+        [CCAMAttribute("videoDuration")]
+        public string videoDuration { get; set; } = null;
+
+        [CCAMAttribute("videoEmbeddable")]
+        public string videoEmbeddable { get; set; } = null;
+
+        [CCAMAttribute("videoLicense")]
+        public string videoLicense { get; set; } = null;
+
+        [CCAMAttribute("videoSyndicated")]
+        public string videoSyndicated { get; set; } = null;
+
+        [CCAMAttribute("videoType")]
+        public string videoType { get; set; } = null;
+
+        #endregion
+
+        #region Properties
+
+        public override string ToString()
         {
-            //THESE PARAMETERS ARE OPTIONAL BUT LIMITED TO ONE (1)
-            //https://developers.google.com/youtube/v3/docs/search/list#usage
-            public const string FOR_CONTENT_OWNER_PARAMETER = "forContentOwner"; //Bool 
-            public const string FOR_DEVELOPER_PARAMETER = "forDeveloper"; //Bool 
-            public const string FOR_MINE_PARAMETER = "forMine"; //Bool 
-            public const string RELATED_TO_VIDEO_ID_PARAMETER = "relatedToVideoId";
+            return CommonFunctions.GenerateQueryString<SearchParameters>(this);
         }
 
-
-        public class OptionalParameters
-        {
-            //OPTIONAL PARAMETERS TO DEFINE THE SEARCH
-            public const string CHANNEL_ID_PARAMETER = "channelId";
-            public const string LOCATION_PARAMETER = "location";
-            public const string LOCATION_RADIUS_PARAMETER = "locationRadius";
-            public const string MAX_RESULTS_PARAMETER = "maxResults"; //0-50 by default 5
-            public const string PAGE_TOKEN_PARAMETER = "pageToken";
-            public const string PUBLISHED_AFTER_PARAMETER = "publishedAfter";
-            public const string PUBLISHED_BEFORE_PARAMETER = "publishedBefore";
-            public const string QUERY_PARAMETER = "q";
-            public const string REGION_CODE_PARAMETER = "regionCode";
-            public const string RELEVANCE_LANGUAGE_PARAMETER = "relevanceLanguage";
-            public const string TOPIC_ID_PARAMETER = "topicId"; //https://developers.google.com/youtube/v3/docs/search/list#
-            public const string VIDEO_CATEGORY_ID_PARAMETER = "videoCategoryId";
-
-            public class Order
-            {
-                public const string ORDER_PARAMETER = "order";
-                public const string DATE = "date";
-                public const string RATING = "rating";
-                public const string RELEVANCE = "relevance";
-                public const string TITLE = "title";
-                public const string VIDEOCOUNT = "videoCount";
-                public const string VIEWCOUNT = "viewCount";
-            }
-            public class EventType
-            {
-                public const string EVEN_TYPE_PARAMETER = "eventType";
-                public const string COMPLETED = "completed";
-                public const string LIVE = "live";
-                public const string UPCOMING = "upcoming";
-            }
-            public class ChannelType
-            {
-                public const string CHANNEL_TYPE_PARAMETER = "channelType";
-                public const string ANY = "any";
-                public const string SHOW = "show";
-            }
-            public class SafeSearch
-            {
-                public const string SAFE_SEARCH_PARAMETER = "safeSearch";
-                public const string MODERATE = "moderate";
-                public const string NONE = "none";
-                public const string STRICT = "strict";
-            }
-            public class Type
-            {
-                public const string TYPE_PARAMETER = "type";
-                public const string CHANNEL = "channel";
-                public const string PLAYLIST = "playlist";
-                public const string VIDEO = "video";
-            }
-            public class VideoCaption
-            {
-                public const string VIDEO_CAPTION_PARAMETER = "videoCaption";
-                public const string ANY = "any";
-                public const string CLOSED_CAPTION = "closedCaption";
-                public const string NONE = "none";
-            }
-            public class VideoDefinition
-            {
-                public const string VIDEO_DEFINITION_PARAMETER = "videoDefinition";
-                public const string ANY = "any";
-                public const string HIGH = "high";
-                public const string STANDART = "standard";
-            }
-            public class VideoDimension
-            {
-                public const string VIDEO_DIMENSION_PARAMETER = "videoDimension";
-                public const string ANY = "any";
-                public const string TWOD_D = "2d";
-                public const string THREE_D = "3d";
-            }
-            public class VideoDuration
-            {
-                public const string VIDEO_DURATION_PARAMETER = "videoDuration";
-                public const string ANY = "any";
-                public const string LONG = "long";
-                public const string MEDIMUM = "medium";
-                public const string SHORT = "short";
-            }
-            public class VideoEmbeddable
-            {
-                public const string VIDEO_EMBEDDABLE_PARAMETER = "videoEmbeddable";
-                public const string ANY = "any";
-                public const string TRUE = "true";
-            }
-            public class videoLicense
-            {
-                public const string VIDEO_LICENCE_PARAMETER = "videoLicense";
-                public const string ANY = "any";
-                public const string CREATIVE_COMMON = "creativeCommon ";
-                public const string YOUTUBE = "youtube";
-            }
-            public class VideoSyndicated
-            {
-                public const string VIDEO_SYNDICATED_PARAMETER = "videoSyndicated";
-                public const string ANY = "any";
-                public const string TRUE = "true";
-            }
-            public class VideoType
-            {
-                public const string VIDEOTYPE_PARAMETER = "videoType";
-                public const string ANY = "any";
-                public const string EPISODE = "episode";
-                public const string MOVIE = "movie";
-            }
-        }
+        #endregion
     }
 }
