@@ -12,6 +12,7 @@ using System.Net.Http;
 using CCAMPServer.Data;
 using System.Threading;
 using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Authorization;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -33,14 +34,14 @@ namespace CCAMPServer.Controllers
 
 
         // GET: api/<controller>
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         public IEnumerable<string> Get()
         {
             log.Information("TEST");
             return new string[] { "value1", "value2" };
         }
 
-        [HttpGet("token")]
+        [HttpGet("token"), AllowAnonymous]
         public IEnumerable<string> GetToken()
         {
             Task<UserCredential> resul = null;
@@ -74,7 +75,7 @@ namespace CCAMPServer.Controllers
 
 
 
-        [HttpGet("result")]
+        [HttpGet("result"), AllowAnonymous]
         public async Task<string> GetResultAsync()
         {
             try
@@ -119,7 +120,7 @@ namespace CCAMPServer.Controllers
 
         }
 
-        [HttpGet("video/{id}")]
+        [HttpGet("video/{id}"), AllowAnonymous]
         public async Task<string> GetVideoAsync(string id)
         {
             string apiKey = "AIzaSyAlBNZZkNZc8P3AjdiJl1LutEVxZesy4_Q";
@@ -154,7 +155,7 @@ namespace CCAMPServer.Controllers
         }
 
         // GET api/<controller>/5
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), AllowAnonymous]
         public string Get(int id)
         {
             return "value";

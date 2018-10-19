@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CCAMPServer.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Cors.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -32,6 +35,16 @@ namespace CCAMPServer
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            services.AddMvc(options =>
+            {
+                // All controller actions which are not marked with [AllowAnonymous] will require
+                // the user is authenticated.
+                var policy = new AuthorizationPolicyBuilder()
+                   .RequireAuthenticatedUser()
+                   .Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
+            });
+
             var rootConnectionStr = String.Format(Configuration.GetConnectionString("RootConnection"), Environment.MachineName);
             var transactionalConnectionStr = String.Format(Configuration.GetConnectionString("TransactionalConnection"), Environment.MachineName);
 
@@ -40,6 +53,9 @@ namespace CCAMPServer
             // Add ApplicationDBContext
             services.AddDbContextPool<ApplicationDBContext>(options => options.UseSqlServer(rootConnectionStr), 6);
             services.AddDbContextPool<TransactionDBContext>(options => options.UseSqlServer(transactionalConnectionStr), 64);
+
+            // Register authentication services
+            RegisterAuth(services);
 
             environmentPolicy = Configuration.GetValue<String>("EnvironmentPolicy");
 
@@ -55,6 +71,25 @@ namespace CCAMPServer
                 });
             });
         }
+
+        private void RegisterAuth(IServiceCollection services)
+        {
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            }).AddJwtBearer(options =>
+            {
+                options.Authority = Configuration.GetSection($"RegisterAuth:Domain").Get<String>();
+                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidAudiences = new List<String>(Configuration.GetSection($"RegisterAuth:ValidAudiences").Get<String[]>())
+                };
+            });           
+        }
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -77,6 +112,9 @@ namespace CCAMPServer
             }
 
             app.UseHttpsRedirection();
+
+            app.UseAuthentication();
+
             app.UseMvc();
 
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())

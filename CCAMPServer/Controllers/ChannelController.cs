@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CCAMPServer.Data;
 using CCAMPServerModel.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -26,16 +27,21 @@ namespace CCAMPServer.Controllers
         }
 
         // GET: api/Channels
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         public IEnumerable<Channel> GetChannel()
         {
+            // Debug line, this should have the 'sub' property info that is the user id in our auth0 app in https://ccampapi.auth0.com/
+            var authToken = AuthHelper.getTokenUserId(User);
+
             return _context.Channel;
         }
 
         // GET: api/Channels/5
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), AllowAnonymous]
         public async Task<IActionResult> GetChannel([FromRoute] int id)
         {
+            var authToken = AuthHelper.getTokenUserId(User);
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);

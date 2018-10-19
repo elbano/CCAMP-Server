@@ -5,6 +5,13 @@ using System.Text;
 
 namespace CCAMPServerModel.Models
 {
+    public enum EStatusMode
+    {
+        sm_Inactive = 0,
+        sm_Active = 1,
+        sm_Suspended = 2,
+    }
+
     public class User
     {
         [Required]
@@ -20,7 +27,7 @@ namespace CCAMPServerModel.Models
         public String AuthToken { get; set; }
 
         [Required]
-        public Boolean Status { get; set; }
+        public EStatusMode Status { get; set; }
 
         [Required]
         public DateTime CreationDate { get; set; }
