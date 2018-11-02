@@ -108,8 +108,9 @@ namespace CCAMPServer.Controllers
                     var response = await client.PostAsync(token.tokenUri, content);
                     var responseContent = await response.Content.ReadAsStringAsync();
                     var tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(responseContent);
+                    string print = "AccessToken = " + tokenResponse.AccessToken + " RefreshToken = " + tokenResponse.RefreshToken;
 
-                    return tokenResponse.AccessToken;
+                    return print;
                 }
 
             }
