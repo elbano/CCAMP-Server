@@ -4,14 +4,16 @@ using CCAMPServer.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CCAMPServer.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20181030210445_Update5")]
+    partial class Update5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -154,17 +156,13 @@ namespace CCAMPServer.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<double>("Amount");
-
                     b.Property<int?>("CampaignId");
 
                     b.Property<int?>("ChannelId");
 
                     b.Property<Guid>("Guid");
 
-                    b.Property<int>("Modality");
-
-                    b.Property<int>("Status");
+                    b.Property<int>("Mode");
 
                     b.HasKey("Id");
 

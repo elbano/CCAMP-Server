@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CCAMPServer.Data;
 using CCAMPServerModel.Models;
+using Serilog;
+using System.Net;
 
 namespace CCAMPServer.Controllers
 {
@@ -14,18 +16,42 @@ namespace CCAMPServer.Controllers
     [ApiController]
     public class DealsController : ControllerBase
     {
+        private static ILogger log { get; } = ApplicationLogging.Logger.ForContext<DealsController>();
         private readonly TransactionDBContext _context;
 
         public DealsController(TransactionDBContext context)
         {
             _context = context;
         }
-
-        // GET: api/Deals
+        
+        // GET: api/Deals/5
         [HttpGet]
-        public IEnumerable<Deal> GetDeal()
+        public IActionResult GetDealsOfUser(int status)
         {
-            return _context.Deal;
+            log.Information("GetDealsOfUser");
+            var authToken = AuthHelper.getTokenUserId(User);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var dealList = _context.Deal.Where(x => x.Channel.ContentCreator.AuthToken.
+                        Equals(authToken, StringComparison.InvariantCultureIgnoreCase)).ToList();
+
+                if (dealList == null)
+                {
+                    return NotFound();
+                }
+                return Ok(dealList);
+            }
+            catch (Exception exception)
+            {
+                log.Error(exception, exception.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError);
+            }            
         }
 
         // GET: api/Deals/5
