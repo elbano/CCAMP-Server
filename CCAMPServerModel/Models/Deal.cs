@@ -6,6 +6,22 @@ using System.Text;
 
 namespace CCAMPServerModel.Models
 {
+    public enum EDealStatus
+    {
+        dm_Proposal = 0,
+        dm_Accepted = 1,  // marked by content creator
+        dm_Completed = 2, // marked by content creator
+        dm_Finished = 3, // marked by sponsor
+        dm_Denied = 4,
+    }
+
+    public enum EDealModality
+    {
+        dm_Total = 0,
+        dm_PerView = 1
+    }
+
+
     public class Deal
     {
         [Key]
@@ -20,5 +36,14 @@ namespace CCAMPServerModel.Models
 
         [ForeignKey("ChannelId")]
         public Channel Channel { get; set; }
+
+        [Required]
+        public EDealStatus Status { get; set; }
+
+        [Required]
+        public EDealModality Modality { get; set; }
+
+        [Required]
+        public Double Amount { get; set; }
     }
 }
