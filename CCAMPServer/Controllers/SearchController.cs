@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using CCAMPServer.Classes;
 using System.Net.Http;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CCAMPServer.Controllers
 {
@@ -29,7 +30,7 @@ namespace CCAMPServer.Controllers
 
         }
 
-        [HttpGet("GetSearchParameters")]
+        [HttpGet("GetSearchParameters"), AllowAnonymous]
         public string GetSearchParameters()
         {
             return JsonConvert.SerializeObject(new SearchQueryParameters(), Formatting.Indented, new ConverterClassDefToJSON(typeof(SearchQueryParameters)));

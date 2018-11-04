@@ -42,14 +42,14 @@ namespace CCAMPServer.Controllers
         }
 
         [HttpGet("token"), AllowAnonymous]
-        public IEnumerable<string> GetToken()
+        public async Task<IEnumerable<string>> GetTokenAsync()
         {
-            Task<UserCredential> resul = null;
+            //Task<UserCredential> resul = null;
             try
             {
-                Data.Authorization bo = new Data.Authorization();
+                Data.Authorization bo = new Data.Authorization("");
                 ClientSecrets cli = new ClientSecrets() { ClientId = client_id, ClientSecret = client_secret };
-                resul = bo.AuthorizeAsync(cli, new[]
+                var resul = bo.AuthorizeAsync(cli, new[]
                         {
                 YouTubeService.Scope.Youtube,
                 YouTubeService.Scope.Youtubepartner,
@@ -61,6 +61,7 @@ namespace CCAMPServer.Controllers
                         CancellationToken.None,
                         new FileDataStore(this.GetType().ToString()));
 
+                var t = "";
 
 
             }
@@ -80,6 +81,7 @@ namespace CCAMPServer.Controllers
         {
             try
             {
+               
 
                 TokenData token = new TokenData()
                 {

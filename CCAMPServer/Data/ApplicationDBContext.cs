@@ -19,6 +19,8 @@ namespace CCAMPServer.Data
         public DbSet<Deal> Deal { get; set; }
         public DbSet<Advertisement> Advertisement { get; set; }
         public DbSet<Transaction> Transaction { get; set; }
+        public DbSet<Token> Token { get; set; }
+        public DbSet<TokenRequest> TokenRequest { get; set; }
         #endregion Properties
 
         #region Constructor
@@ -38,4 +40,26 @@ namespace CCAMPServer.Data
         }
         #endregion Constructor
     }
+
+
+    public class TokenDBContext : ApplicationDBContext
+    {
+        #region Constructor
+        public TokenDBContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
+        {
+
+        }
+        #endregion Constructor
+    }
+
+    public class TokenRequestDBContext : ApplicationDBContext
+    {
+        #region Constructor
+        public TokenRequestDBContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
+        {
+
+        }
+        #endregion Constructor
+    }
+
 }

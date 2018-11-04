@@ -11,7 +11,13 @@ namespace CCAMPServer.Data
 {
     public class Authorization: GoogleWebAuthorizationBroker
     {
-        public static string RedirectUri;
+        public readonly string RedirectUri;
+
+        public Authorization(string redirectUrl)
+        {
+            RedirectUri = redirectUrl;//"https://localhost:44371/api/test/result";
+        }
+
 
         public new async Task<UserCredential> AuthorizeAsync(
             ClientSecrets clientSecrets,
@@ -20,7 +26,7 @@ namespace CCAMPServer.Data
             CancellationToken taskCancellationToken,
             IDataStore dataStore = null)
         {
-            RedirectUri = "https://localhost:44371/api/test/result";
+            
             var initializer = new GoogleAuthorizationCodeFlow.Initializer
             {
                 ClientSecrets = clientSecrets,
@@ -29,7 +35,7 @@ namespace CCAMPServer.Data
                 taskCancellationToken, dataStore).ConfigureAwait(false);
         }
 
-        private static async Task<UserCredential> AuthorizeAsyncCore(
+        private async Task<UserCredential> AuthorizeAsyncCore(
             GoogleAuthorizationCodeFlow.Initializer initializer,
             IEnumerable<string> scopes,
             string user,
@@ -38,7 +44,7 @@ namespace CCAMPServer.Data
         {
             initializer.Scopes = scopes;
             initializer.DataStore = dataStore ?? new FileDataStore(Folder);
-            var flow = new GooglePlusAccessToken(initializer);
+            var flow = new GooglePlusAccessToken(initializer, RedirectUri);
             return await new AuthorizationCodeInstalledApp(flow,
                 new LocalServerCodeReceiver())
                 .AuthorizeAsync(user, taskCancellationToken).ConfigureAwait(false);

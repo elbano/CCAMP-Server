@@ -53,6 +53,8 @@ namespace CCAMPServer
             // Add ApplicationDBContext
             services.AddDbContextPool<ApplicationDBContext>(options => options.UseSqlServer(rootConnectionStr), 6);
             services.AddDbContextPool<TransactionDBContext>(options => options.UseSqlServer(transactionalConnectionStr), 64);
+            services.AddDbContextPool<TokenDBContext>(options => options.UseSqlServer(rootConnectionStr), 64);
+            services.AddDbContextPool<TokenRequestDBContext>(options => options.UseSqlServer(rootConnectionStr), 64);
 
             // Register authentication services
             RegisterAuth(services);

@@ -9,13 +9,18 @@ namespace CCAMPServer.Data
 {
     public class GooglePlusAccessToken: GoogleAuthorizationCodeFlow
     {
-        public GooglePlusAccessToken(Initializer initializer)
-            : base(initializer) { }
+        private string _redirectUri;
+
+        public GooglePlusAccessToken(Initializer initializer, string redirectUri)
+            : base(initializer) {
+
+            _redirectUri = redirectUri;
+        }
 
         public override AuthorizationCodeRequestUrl
                        CreateAuthorizationCodeRequest(string redirectUri)
         {
-            return base.CreateAuthorizationCodeRequest(Authorization.RedirectUri);
+            return base.CreateAuthorizationCodeRequest(_redirectUri);
         }
     }
 }
