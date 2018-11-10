@@ -9,6 +9,7 @@ using CCAMPServer.Data;
 using CCAMPServerModel.Models;
 using Serilog;
 using System.Net;
+using Newtonsoft.Json;
 
 namespace CCAMPServer.Controllers
 {
@@ -27,8 +28,8 @@ namespace CCAMPServer.Controllers
         // GET: api/Deals/5
         [HttpGet]
         public IActionResult GetDealsOfUser(int status)
-        {
-            log.Information("GetDealsOfUser");
+        {            
+            var jsonResult = new JsonResult("");            
             var authToken = AuthHelper.getTokenUserId(User);
 
             if (!ModelState.IsValid)
@@ -38,14 +39,21 @@ namespace CCAMPServer.Controllers
 
             try
             {
-                var dealList = _context.Deal.Where(x => x.Channel.ContentCreator.AuthToken.
+                var dealList = _context.Deal.Include(d => d.Campaign).ThenInclude(x => x.Sponsor).
+                    Where(x => x.Channel.ContentCreator.AuthUserId.
                         Equals(authToken, StringComparison.InvariantCultureIgnoreCase)).ToList();
 
                 if (dealList == null)
                 {
                     return NotFound();
                 }
-                return Ok(dealList);
+                else
+                {
+                    jsonResult = new JsonResult(dealList, ApplicationJsonSerializerSettings.Settings);
+                    jsonResult.StatusCode = (int)HttpStatusCode.OK;
+                }
+
+                return jsonResult;
             }
             catch (Exception exception)
             {

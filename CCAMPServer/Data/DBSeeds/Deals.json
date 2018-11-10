@@ -1,0 +1,62 @@
+[
+  {
+    "Guid": "1BE7EBA8-9887-4916-BF74-FAD788048CE2",
+    "Campaign": {
+      "Guid": "27517660-41EA-4B95-AE32-D51FB53C8E69"
+    },
+    "Channel": {
+      "Guid": "19055265-584A-4F00-9278-8B1483ADA73D"
+    },
+    "Status": "dm_Proposal",
+    "Modality": "dm_Total",
+    "Amount": 10000
+  },
+  {
+    "Guid": "03B8A696-295D-464E-940F-5A74E974D07C",
+    "Campaign": {
+      "Guid": "DCC32531-E7AF-4428-B07D-03B54B784D8B"
+    },
+    "Channel": {
+      "Guid": "19055265-584A-4F00-9278-8B1483ADA73D"
+    },
+    "Status": "dm_Proposal",
+    "Modality": "dm_PerView",
+    "Amount": 0.5
+  },
+  {
+    "Guid": "407C75E7-47C8-4FEF-9385-0C22A6524438",
+    "Campaign": {
+      "Guid": "D55815D0-D1E9-41FD-BB26-274F98FDE044"
+    },
+    "Channel": {
+      "Guid": "19055265-584A-4F00-9278-8B1483ADA73D"
+    },
+    "Status": "dm_Accepted",
+    "Modality": "dm_Total",
+    "Amount": 12500
+  },
+  {
+    "Guid": "FA94123B-B6DC-4BC6-BE05-7B75C5F6D6BF",
+    "Campaign": {
+      "Guid": "EDEBE641-8D98-4A4A-A32C-3E9A171C6975"
+    },
+    "Channel": {
+      "Guid": "19055265-584A-4F00-9278-8B1483ADA73D"
+    },
+    "Status": "dm_Completed",
+    "Modality": "dm_Total",
+    "Amount": 8000
+  },
+  {
+    "Guid": "C6209BF3-56FE-44BD-AC8E-F8FCA492EC64",
+    "Campaign": {
+      "Guid": "6563C6AB-DD26-42DF-BE53-E9B3CADF7A3E"
+    },
+    "Channel": {
+      "Guid": "19055265-584A-4F00-9278-8B1483ADA73D"
+    },
+    "Status": "dm_Finished",
+    "Modality": "dm_Total",
+    "Amount": 7500
+  }
+]

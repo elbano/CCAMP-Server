@@ -24,7 +24,7 @@ namespace CCAMPServerModel.Models
         public String UserName { get; set; }
 
         [Required]
-        public String AuthToken { get; set; }
+        public String AuthUserId { get; set; }
 
         [Required]
         public EStatusMode Status { get; set; }

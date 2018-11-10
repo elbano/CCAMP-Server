@@ -1,0 +1,52 @@
+[
+  {
+    "Guid": "D55815D0-D1E9-41FD-BB26-274F98FDE044",
+    "Name": "Nike Campaign Shoes",
+    "StartDate": "2018-10-18T16:00:00.000000",
+    "Sponsor": {
+      "Guid": "5972E0DD-887C-4342-8F26-A3A8250A015B"
+    },
+    "AdvertisementList": [],
+    "DealList": []
+  },
+  {
+    "Guid": "EDEBE641-8D98-4A4A-A32C-3E9A171C6975",
+    "Name": "Nike Campaign Shirts",
+    "StartDate": "2018-10-18T16:00:00.000000",
+    "Sponsor": {
+      "Guid": "5972E0DD-887C-4342-8F26-A3A8250A015B"
+    },
+    "AdvertisementList": [],
+    "DealList": []
+  },
+  {
+    "Guid": "DCC32531-E7AF-4428-B07D-03B54B784D8B",
+    "Name": "Dell Laptops",
+    "StartDate": "2018-10-18T16:00:00.000000",
+    "Sponsor": {
+      "Guid": "6D90C713-1E46-4AB8-BFC3-B708B13CD594"
+    },
+    "AdvertisementList": [],
+    "DealList": []
+  },
+  {
+    "Guid": "27517660-41EA-4B95-AE32-D51FB53C8E69",
+    "Name": "Beats Headphones",
+    "StartDate": "2018-10-18T16:00:00.000000",
+    "Sponsor": {
+      "Guid": "09A13EA0-2269-4185-BD2C-F5BD31564FB8"
+    },
+    "AdvertisementList": [],
+    "DealList": []
+  },
+  {
+    "Guid": "6563C6AB-DD26-42DF-BE53-E9B3CADF7A3E",
+    "Name": "Netflix Service",
+    "StartDate": "2018-10-18T16:00:00.000000",
+    "Sponsor": {
+      "Guid": "9547D169-35DF-4AAA-A8F8-77BA9B52900C"
+    },
+    "AdvertisementList": [],
+    "DealList": []
+  }
+]

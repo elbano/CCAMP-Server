@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using CCAMPServer.Data;
 using CCAMPServerModel.Models;
+using CCAMPServerModel.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -55,6 +57,43 @@ namespace CCAMPServer.Controllers
             }
 
             return Ok(channel);
+        }
+
+        // GET: api/Channels/5
+        [HttpGet("keys={searchString}"), AllowAnonymous]
+        public IActionResult GetChannelKeyWordSearch(String searchString)
+        {
+            var jsonResult = new JsonResult("");
+
+            string[] searchTerms = searchString.Split(' ');
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var channelList = _context.Channel.Where(x => x.KeyWords.ContainsAny(searchTerms)).ToList();
+                //var channelList = _context.Channel.Where(x => x.KeyWords.Contains(searchString)).ToList();
+
+                if (channelList == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    jsonResult = new JsonResult(channelList, ApplicationJsonSerializerSettings.Settings);
+                    jsonResult.StatusCode = (int)HttpStatusCode.OK;
+                }
+
+                return jsonResult;
+            }
+            catch (Exception exception)
+            {
+                log.Error(exception, exception.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError);
+            }
         }
 
         // PUT: api/Channels/5

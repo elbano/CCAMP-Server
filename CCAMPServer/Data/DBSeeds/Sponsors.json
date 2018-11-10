@@ -1,0 +1,52 @@
+[
+  {
+    "Guid": "5972E0DD-887C-4342-8F26-A3A8250A015B",
+    "CompanyName": "Nike",
+    "CampaigntList": [],
+    "Email": "fakeemail@fake.com",
+    "UserName": "NikeUser",
+    "AuthUserId": "NONE",
+    "Status": "sm_Active",
+    "CreationDate": "2018-10-18T16:00:00.000000"
+  },
+  {
+    "Guid": "6D90C713-1E46-4AB8-BFC3-B708B13CD594",
+    "CompanyName": "Dell",
+    "CampaigntList": [],
+    "Email": "fakeemail@fake.com",
+    "UserName": "DellUser",
+    "AuthUserId": "NONE",
+    "Status": "sm_Active",
+    "CreationDate": "2018-10-18T16:00:00.000000"
+  },
+  {
+    "Guid": "9547D169-35DF-4AAA-A8F8-77BA9B52900C",
+    "CompanyName": "Netflix",
+    "CampaigntList": [],
+    "Email": "fakeemail@fake.com",
+    "UserName": "NetflixUser",
+    "AuthUserId": "NONE",
+    "Status": "sm_Active",
+    "CreationDate": "2018-10-18T16:00:00.000000"
+  },
+  {
+    "Guid": "AA6961CD-79D2-4755-BDDC-4E8F38367538",
+    "CompanyName": "Gatorade",
+    "CampaigntList": [],
+    "Email": "fakeemail@fake.com",
+    "UserName": "GatoradeUser",
+    "AuthUserId": "NONE",
+    "Status": "sm_Active",
+    "CreationDate": "2018-10-18T16:00:00.000000"
+  },
+  {
+    "Guid": "09A13EA0-2269-4185-BD2C-F5BD31564FB8",
+    "CompanyName": "Beats",
+    "CampaigntList": [],
+    "Email": "fakeemail@fake.com",
+    "UserName": "BeatsUser",
+    "AuthUserId": "NONE",
+    "Status": "sm_Active",
+    "CreationDate": "2018-10-18T16:00:00.000000"
+  }
+]

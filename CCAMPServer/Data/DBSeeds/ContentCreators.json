@@ -3,7 +3,7 @@
     "Guid": "a686d261-636d-4bf5-9bf2-d3dd1d6f3f53",
     "Email": "ccamptestuser1@gmail.com",
     "UserName": "CCAMP TEST",
-    "AuthToken": "google-oauth2|105968547501401706371", //THIS TOKEN IS FOR CCAMP AUTH NOT GOOGLE
+    "AuthUserId": "google-oauth2|105968547501401706371", //THIS TOKEN IS FOR CCAMP AUTH NOT GOOGLE
     "Status": "sm_Active",
     "CreationDate": "2018-10-18T16:00:00.000000",
     "Name": "Drey",

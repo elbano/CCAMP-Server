@@ -4,14 +4,16 @@ using CCAMPServer.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CCAMPServer.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20181106184317_Update8")]
+    partial class Update8
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -81,9 +83,6 @@ namespace CCAMPServer.Data.Migrations
 
                     b.Property<Guid>("Guid");
 
-                    b.Property<string>("KeyWords")
-                        .IsRequired();
-
                     b.Property<string>("Name")
                         .IsRequired();
 
@@ -125,7 +124,7 @@ namespace CCAMPServer.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AuthUserId")
+                    b.Property<string>("AuthToken")
                         .IsRequired();
 
                     b.Property<string>("CompanyName");
@@ -186,7 +185,7 @@ namespace CCAMPServer.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AuthUserId")
+                    b.Property<string>("AuthToken")
                         .IsRequired();
 
                     b.Property<string>("CompanyName")
@@ -215,7 +214,7 @@ namespace CCAMPServer.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AuthUserId")
+                    b.Property<string>("AuthToken")
                         .IsRequired();
 
                     b.Property<DateTime>("CreationDate");
@@ -239,46 +238,6 @@ namespace CCAMPServer.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SupportUser");
-                });
-
-            modelBuilder.Entity("CCAMPServerModel.Models.Token", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AccessToken")
-                        .IsRequired();
-
-                    b.Property<string>("EmailAddress")
-                        .IsRequired();
-
-                    b.Property<string>("RefreshToken")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Token");
-                });
-
-            modelBuilder.Entity("CCAMPServerModel.Models.TokenRequest", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Email")
-                        .IsRequired();
-
-                    b.Property<string>("RequestDate")
-                        .IsRequired();
-
-                    b.Property<string>("ResponseUrl")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TokenRequest");
                 });
 
             modelBuilder.Entity("CCAMPServerModel.Models.Transaction", b =>

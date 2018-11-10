@@ -4,14 +4,16 @@ using CCAMPServer.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CCAMPServer.Data.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20181106190540_Update9")]
+    partial class Update9
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -80,9 +82,6 @@ namespace CCAMPServer.Data.Migrations
                     b.Property<DateTime>("CreationDate");
 
                     b.Property<Guid>("Guid");
-
-                    b.Property<string>("KeyWords")
-                        .IsRequired();
 
                     b.Property<string>("Name")
                         .IsRequired();
@@ -239,46 +238,6 @@ namespace CCAMPServer.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SupportUser");
-                });
-
-            modelBuilder.Entity("CCAMPServerModel.Models.Token", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AccessToken")
-                        .IsRequired();
-
-                    b.Property<string>("EmailAddress")
-                        .IsRequired();
-
-                    b.Property<string>("RefreshToken")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Token");
-                });
-
-            modelBuilder.Entity("CCAMPServerModel.Models.TokenRequest", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Email")
-                        .IsRequired();
-
-                    b.Property<string>("RequestDate")
-                        .IsRequired();
-
-                    b.Property<string>("ResponseUrl")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TokenRequest");
                 });
 
             modelBuilder.Entity("CCAMPServerModel.Models.Transaction", b =>

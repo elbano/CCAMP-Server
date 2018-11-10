@@ -36,7 +36,9 @@ namespace CCAMPServerModel.Models
 
         [ForeignKey("ChannelId")]
         public Channel Channel { get; set; }
-
+        /// <summary>
+        /// DEAL NEEDS A HISTORY OF STATUS IN AN ADDITIONAL TABLE WITH TIMESTAMPT OF EACH STATUS
+        /// </summary>
         [Required]
         public EDealStatus Status { get; set; }
 

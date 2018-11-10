@@ -22,6 +22,14 @@ namespace CCAMPServer.Data
         public static void Seed(ApplicationDBContext dBContext, IConfiguration Configuration)
         {
             CreateOrUpdateContentCreator(dBContext, Configuration.GetSection($"DBSeeder:ContentCreators").Get<String>());
+
+            CreateOrUpdateSponsor(dBContext, Configuration.GetSection($"DBSeeder:Sponsors").Get<String>());
+
+            CreateOrUpdateCampaign(dBContext, Configuration.GetSection($"DBSeeder:Campaigns").Get<String>());
+
+            CreateOrUpdateChannel(dBContext, Configuration.GetSection($"DBSeeder:Channels").Get<String>());
+
+            CreateOrUpdateDeal(dBContext, Configuration.GetSection($"DBSeeder:Deals").Get<String>());
         }
 
         /// <summary>
@@ -71,6 +79,146 @@ namespace CCAMPServer.Data
                     {
                         newContentCreator.Id = contentCreator.Id;
                         dBContext.Entry(contentCreator).CurrentValues.SetValues(newContentCreator);
+                    }
+                }
+                dBContext.SaveChanges();
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception);
+                log.Error(exception, exception.Message);
+            }
+        }
+
+        /// <summary>
+        /// Creates or updates the initial recrods for sponsors
+        /// </summary>
+        /// <param name="dBContext"></param>
+        private static void CreateOrUpdateSponsor(ApplicationDBContext dBContext, String jsonFile)
+        {
+            try
+            {
+                var sponsorList = GetSetupRecord<Sponsor>(jsonFile);
+
+                foreach (var newSponsor in sponsorList)
+                {
+                    var sponsor = dBContext.Sponsor.FirstOrDefault(x => x.Guid.Equals(newSponsor.Guid));
+
+                    if (sponsor == null)
+                    {
+                        dBContext.Sponsor.Add(newSponsor);
+                    }
+                    else
+                    {
+                        newSponsor.Id = sponsor.Id;
+                        dBContext.Entry(sponsor).CurrentValues.SetValues(newSponsor);
+                    }
+                }
+                dBContext.SaveChanges();
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception);
+                log.Error(exception, exception.Message);
+            }
+        }
+
+        /// <summary>
+        /// Creates or updates the initial recrods for campaigns
+        /// </summary>
+        /// <param name="dBContext"></param>
+        private static void CreateOrUpdateCampaign(ApplicationDBContext dBContext, String jsonFile)
+        {
+            try
+            {
+                var campaignList = GetSetupRecord<Campaign>(jsonFile);
+
+                foreach (var newCampaign in campaignList)
+                {
+                    var campaign = dBContext.Campaign.FirstOrDefault(x => x.Guid.Equals(newCampaign.Guid));
+                    var sponsor = dBContext.Sponsor.FirstOrDefault(x => x.Guid.Equals(newCampaign.Sponsor.Guid));
+                    if (sponsor != null) newCampaign.Sponsor = sponsor;
+
+                    if (campaign == null)
+                    {
+                        dBContext.Campaign.Add(newCampaign);
+                    }
+                    else
+                    {
+                        newCampaign.Id = campaign.Id;
+                        dBContext.Entry(campaign).CurrentValues.SetValues(newCampaign);
+                    }
+                }
+                dBContext.SaveChanges();
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception);
+                log.Error(exception, exception.Message);
+            }
+        }
+
+        /// <summary>
+        /// Creates or updates the initial recrods for channels
+        /// </summary>
+        /// <param name="dBContext"></param>
+        private static void CreateOrUpdateChannel(ApplicationDBContext dBContext, String jsonFile)
+        {
+            try
+            {
+                var channelList = GetSetupRecord<Channel>(jsonFile);
+
+                foreach (var newChannel in channelList)
+                {
+                    var channel = dBContext.Channel.FirstOrDefault(x => x.Guid.Equals(newChannel.Guid));
+                    var contentCreator = dBContext.ContentCreator.FirstOrDefault(x => x.Guid.Equals(newChannel.ContentCreator.Guid));
+                    if (contentCreator != null) newChannel.ContentCreator = contentCreator;
+
+                    if (channel == null)
+                    {
+                        dBContext.Channel.Add(newChannel);
+                    }
+                    else
+                    {
+                        newChannel.Id = channel.Id;
+                        dBContext.Entry(channel).CurrentValues.SetValues(newChannel);
+                    }
+                }
+                dBContext.SaveChanges();
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception);
+                log.Error(exception, exception.Message);
+            }
+        }
+
+        /// <summary>
+        /// Creates or updates the initial recrods for deals
+        /// </summary>
+        /// <param name="dBContext"></param>
+        private static void CreateOrUpdateDeal(ApplicationDBContext dBContext, String jsonFile)
+        {
+            try
+            {
+                var dealList = GetSetupRecord<Deal>(jsonFile);
+
+                foreach (var newDeal in dealList)
+                {
+                    var deal = dBContext.Deal.FirstOrDefault(x => x.Guid.Equals(newDeal.Guid));
+                    var channel = dBContext.Channel.FirstOrDefault(x => x.Guid.Equals(newDeal.Channel.Guid));
+                    if (channel != null) newDeal.Channel = channel;
+                    var campaign = dBContext.Campaign.FirstOrDefault(x => x.Guid.Equals(newDeal.Campaign.Guid));
+                    if (campaign != null) newDeal.Campaign = campaign;
+
+                    if (deal == null)
+                    {
+                        dBContext.Deal.Add(newDeal);
+                    }
+                    else
+                    {
+                        newDeal.Id = deal.Id;
+                        dBContext.Entry(deal).CurrentValues.SetValues(newDeal);
                     }
                 }
                 dBContext.SaveChanges();

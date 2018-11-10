@@ -26,5 +26,13 @@ namespace CCAMPServerModel.Models
         public List<Content> ContentList { get; set; }
 
         public List<Deal> DealList { get; set; }
+
+        public String YoutubeId { get; set; }
+
+        /// <summary>
+        /// We don't care about normalizing keywords into a table thus will add more complexity and time to the query
+        /// </summary>
+        [Required]
+        public String KeyWords { get; set; }
     }
 }
