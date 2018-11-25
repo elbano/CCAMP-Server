@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CCAMPServer.Classes;
 using CCAMPServer.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -80,8 +83,9 @@ namespace CCAMPServer
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-
-            }).AddJwtBearer(options =>
+            })
+            .AddCookie()
+            .AddJwtBearer(options =>
             {
                 options.Authority = Configuration.GetSection($"RegisterAuth:Domain").Get<String>();
                 options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
@@ -89,6 +93,14 @@ namespace CCAMPServer
                     ValidateIssuer = true,
                     ValidAudiences = new List<String>(Configuration.GetSection($"RegisterAuth:ValidAudiences").Get<String[]>())
                 };
+                
+            })
+            .AddOpenIdConnect(options => {
+                options.Authority = Configuration.GetSection($"RegisterAuth:Domain").Get<String>();
+                options.ClientId = Constants.APP.CLIENT_ID;
+                options.ClientSecret = Constants.APP.CLIENT_SECRET;
+                options.SaveTokens = true;
+                options.GetClaimsFromUserInfoEndpoint = true;
             });           
         }
 

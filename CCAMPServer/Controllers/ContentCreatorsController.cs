@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CCAMPServer.Data;
 using CCAMPServerModel.Models;
+using Microsoft.AspNetCore.Authorization;
+using CCAMPServer.Classes;
 
 namespace CCAMPServer.Controllers
 {
@@ -14,18 +16,18 @@ namespace CCAMPServer.Controllers
     [ApiController]
     public class ContentCreatorsController : ControllerBase
     {
-        private readonly TransactionDBContext _context;
+        private readonly ContentCreatorManager _manager;
 
         public ContentCreatorsController(TransactionDBContext context)
         {
-            _context = context;
+            _manager = new ContentCreatorManager(context, HttpContext, User);
         }
 
         // GET: api/ContentCreators
         [HttpGet]
         public IEnumerable<ContentCreator> GetContentCreator()
         {
-            return _context.ContentCreator;
+            return _manager.GetContentCreator();
         }
 
         // GET: api/ContentCreators/5
@@ -37,7 +39,7 @@ namespace CCAMPServer.Controllers
                 return BadRequest(ModelState);
             }
 
-            var contentCreator = await _context.ContentCreator.FindAsync(id);
+            var contentCreator = await _manager.GetContentCreatorById(id);
 
             if (contentCreator == null)
             {
@@ -61,23 +63,7 @@ namespace CCAMPServer.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(contentCreator).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ContentCreatorExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _manager.SetContentCreatorState(id, contentCreator);
 
             return NoContent();
         }
@@ -91,8 +77,7 @@ namespace CCAMPServer.Controllers
                 return BadRequest(ModelState);
             }
 
-            _context.ContentCreator.Add(contentCreator);
-            await _context.SaveChangesAsync();
+            await _manager.CreateUpdateContentCreator(contentCreator);
 
             return CreatedAtAction("GetContentCreator", new { id = contentCreator.Id }, contentCreator);
         }
@@ -106,21 +91,15 @@ namespace CCAMPServer.Controllers
                 return BadRequest(ModelState);
             }
 
-            var contentCreator = await _context.ContentCreator.FindAsync(id);
+            var contentCreator = await _manager.GetContentCreatorById(id);
+
             if (contentCreator == null)
             {
                 return NotFound();
             }
 
-            _context.ContentCreator.Remove(contentCreator);
-            await _context.SaveChangesAsync();
-
+            await _manager.DeleteContentCreator(contentCreator);
             return Ok(contentCreator);
-        }
-
-        private bool ContentCreatorExists(int id)
-        {
-            return _context.ContentCreator.Any(e => e.Id == id);
         }
     }
 }

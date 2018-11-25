@@ -123,14 +123,40 @@ namespace CCAMPServer.Classes
             return "ACK";
         }
 
-        public static UserInfo GetUserInfobyToken(string accessToken)
+        public static UserInfo GetAuth0UserInfobyToken(string accessToken)
         {
             try
             {
                 using (var client = new HttpClient())
                 {
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    var request = client.GetAsync(string.Format(Constants.API.USER_INFO, accessToken));
+                    var request = client.GetAsync(string.Format(Constants.API.AUTH0_ENDPOINT_USER_INFO, accessToken));
+                    var response = request.Result;
+
+                    if (response != null && response.IsSuccessStatusCode)
+                    {
+                        var json = response.Content.ReadAsStringAsync().Result;
+                        return JsonConvert.DeserializeObject<UserInfo>(json);
+                    }
+
+                    return null;
+                }
+            }
+            catch (Exception)
+            {
+                //Log exception and return Error
+                return null;
+            }
+        }
+
+        public static UserInfo GetGoogleUserInfobyToken(string accessToken)
+        {
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    var request = client.GetAsync(string.Format(Constants.API.USER_INFO_BY_ACCESS_TOKEN, accessToken));
                     var response = request.Result;
 
                     if (response != null && response.IsSuccessStatusCode)
@@ -176,7 +202,7 @@ namespace CCAMPServer.Classes
                     var tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(responseContent);
                     string print = "AccessToken = " + tokenResponse.AccessToken + " RefreshToken = " + tokenResponse.RefreshToken;
 
-                    var userInfo = CommonFunctions.GetUserInfobyToken(tokenResponse.AccessToken);
+                    var userInfo = CommonFunctions.GetGoogleUserInfobyToken(tokenResponse.AccessToken);
 
                     //Call DB to store the data
 
@@ -205,6 +231,33 @@ namespace CCAMPServer.Classes
             {
 
                 throw;
+            }
+        }
+
+        public static void GetUserByUserId(string userId = "105968547501401706371")
+        {
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    var request = client.GetAsync(string.Format(Constants.API.USER_INFO_BY_USER_ID, userId));
+                    var response = request.Result;
+
+                    if (response != null && response.IsSuccessStatusCode)
+                    {
+                        var json = response.Content.ReadAsStringAsync().Result;
+                        var gt = "";
+                        //return JsonConvert.DeserializeObject<UserInfo>(json);
+                    }
+
+                    //return null;
+                }
+            }
+            catch (Exception)
+            {
+                //Log exception and return Error
+                //return null;
             }
         }
     }

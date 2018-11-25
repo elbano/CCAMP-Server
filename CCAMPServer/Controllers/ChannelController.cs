@@ -33,7 +33,7 @@ namespace CCAMPServer.Controllers
         public IEnumerable<Channel> GetChannel()
         {
             // Debug line, this should have the 'sub' property info that is the user id in our auth0 app in https://ccampapi.auth0.com/
-            var authToken = AuthHelper.getTokenUserId(User);
+            var authToken = AuthHelper.GetTokenUserId(User);
 
             return _context.Channel;
         }
@@ -42,7 +42,7 @@ namespace CCAMPServer.Controllers
         [HttpGet("{id}"), AllowAnonymous]
         public async Task<IActionResult> GetChannel([FromRoute] int id)
         {
-            var authToken = AuthHelper.getTokenUserId(User);
+            var authToken = AuthHelper.GetTokenUserId(User);
 
             if (!ModelState.IsValid)
             {

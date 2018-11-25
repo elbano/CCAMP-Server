@@ -12,10 +12,11 @@ namespace CCAMPServer.Classes
             public const string YOUTUBE_BASE_REQUEST = "https://www.googleapis.com/youtube/v3/{0}";
             public const string YOUTUBE_API_KEY = "AIzaSyAlBNZZkNZc8P3AjdiJl1LutEVxZesy4_Q";
             public const string TOKEN_URI = "https://www.googleapis.com/oauth2/v4/token";
-            public const string USER_INFO = "https://www.googleapis.com/oauth2/v2/userinfo?alt=json&access_token={0}";
-            
+            public const string USER_INFO_BY_ACCESS_TOKEN = "https://www.googleapis.com/oauth2/v2/userinfo?alt=json&access_token={0}";
+            public const string USER_INFO_BY_USER_ID = "https://www.googleapis.com/plus/v1/people/{0}";
             public const string YOUTUBE_SEARCH = "search?part=snippet{0}";
             public const string YOUTUBE_KEY_PARAM = "{0}&key={1}";
+            public const string AUTH0_ENDPOINT_USER_INFO = "https://ccampapi.auth0.com/userinfo?access_token={0}";
 
             public class Scopes
             {

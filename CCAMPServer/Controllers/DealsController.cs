@@ -10,11 +10,13 @@ using CCAMPServerModel.Models;
 using Serilog;
 using System.Net;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CCAMPServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class DealsController : ControllerBase
     {
         private static ILogger log { get; } = ApplicationLogging.Logger.ForContext<DealsController>();
@@ -30,7 +32,7 @@ namespace CCAMPServer.Controllers
         public IActionResult GetDealsOfUser(int status)
         {            
             var jsonResult = new JsonResult("");            
-            var authToken = AuthHelper.getTokenUserId(User);
+            var authToken = AuthHelper.GetTokenUserId(User);
 
             if (!ModelState.IsValid)
             {
