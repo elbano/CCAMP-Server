@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using CCAMPServer.Classes;
 using CCAMPServer.Data;
 using CCAMPServerModel.Models;
-using Serilog;
-using System.Net;
-using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Serilog;
+using System;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace CCAMPServer.Controllers
 {
@@ -20,20 +16,18 @@ namespace CCAMPServer.Controllers
     public class DealsController : ControllerBase
     {
         private static ILogger log { get; } = ApplicationLogging.Logger.ForContext<DealsController>();
-        private readonly TransactionDBContext _context;
+        private readonly DealsManager _manager;
 
         public DealsController(TransactionDBContext context)
         {
-            _context = context;
+            _manager = new DealsManager(context, HttpContext, User);
         }
         
         // GET: api/Deals/5
         [HttpGet]
         public IActionResult GetDealsOfUser(int status)
         {            
-            var jsonResult = new JsonResult("");            
-            var authToken = AuthHelper.GetTokenUserId(User);
-
+            
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -41,27 +35,22 @@ namespace CCAMPServer.Controllers
 
             try
             {
-                var dealList = _context.Deal.Include(d => d.Campaign).ThenInclude(x => x.Sponsor).
-                    Where(x => x.Channel.ContentCreator.AuthUserId.
-                        Equals(authToken, StringComparison.InvariantCultureIgnoreCase)).ToList();
+                var lstDeals =_manager.GetUserDeals(status);
 
-                if (dealList == null)
+                if (lstDeals == null)
                 {
                     return NotFound();
                 }
                 else
                 {
-                    jsonResult = new JsonResult(dealList, ApplicationJsonSerializerSettings.Settings);
-                    jsonResult.StatusCode = (int)HttpStatusCode.OK;
-                }
-
-                return jsonResult;
+                    return lstDeals;
+                };
             }
             catch (Exception exception)
             {
                 log.Error(exception, exception.Message);
                 return StatusCode((int)HttpStatusCode.InternalServerError);
-            }            
+            }           
         }
 
         // GET: api/Deals/5
@@ -73,7 +62,7 @@ namespace CCAMPServer.Controllers
                 return BadRequest(ModelState);
             }
 
-            var deal = await _context.Deal.FindAsync(id);
+            var deal = await _manager.GetDealById(id); 
 
             if (deal == null)
             {
@@ -97,22 +86,13 @@ namespace CCAMPServer.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(deal).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _manager.SetContentCreatorState(id, deal);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception exception)
             {
-                if (!DealExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                log.Error(exception, exception.Message);
             }
 
             return NoContent();
@@ -127,8 +107,14 @@ namespace CCAMPServer.Controllers
                 return BadRequest(ModelState);
             }
 
-            _context.Deal.Add(deal);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _manager.CreateUpdateDeal(deal);
+            }
+            catch (Exception exception)
+            {
+                log.Error(exception, exception.Message);
+            }
 
             return CreatedAtAction("GetDeal", new { id = deal.Id }, deal);
         }
@@ -142,21 +128,23 @@ namespace CCAMPServer.Controllers
                 return BadRequest(ModelState);
             }
 
-            var deal = await _context.Deal.FindAsync(id);
+            var deal = await _manager.GetDealById(id);
+
             if (deal == null)
             {
-                return NotFound();
+                return NoContent();
             }
 
-            _context.Deal.Remove(deal);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _manager.DeleteDealById(id);
+            }
+            catch (Exception exception)
+            {
+                log.Error(exception, exception.Message);
+            }
 
             return Ok(deal);
-        }
-
-        private bool DealExists(int id)
-        {
-            return _context.Deal.Any(e => e.Id == id);
         }
     }
 }

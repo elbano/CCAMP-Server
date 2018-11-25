@@ -10,23 +10,17 @@ using System.Threading.Tasks;
 
 namespace CCAMPServer.Classes
 {
-    public class ContentCreatorManager : IContentCreatorManager
+    public class ContentCreatorManager : BaseManager, IContentCreatorManager
     {
         #region Variables
-
-        private readonly TransactionDBContext _context;
-        private readonly HttpContext _httpContext;
-        private readonly ClaimsPrincipal _user;
 
         #endregion
 
         #region Constructor
 
-        public ContentCreatorManager(TransactionDBContext context, HttpContext httpContext,ClaimsPrincipal user)
+        public ContentCreatorManager(TransactionDBContext context, HttpContext httpContext,ClaimsPrincipal user):
+            base(context,  httpContext,  user)
         {
-            _context = context;
-            _httpContext = httpContext;
-            _user = user;
         }
 
         #endregion
