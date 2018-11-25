@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CCAMPServer.Data;
 using CCAMPServerModel.Models;
+using CCAMPServer.Classes;
 
 namespace CCAMPServer.Controllers
 {
@@ -14,18 +15,18 @@ namespace CCAMPServer.Controllers
     [ApiController]
     public class AdvertisementsController : ControllerBase
     {
-        private readonly TransactionDBContext _context;
+        private readonly AdvertisementManager _manager;
 
         public AdvertisementsController(TransactionDBContext context)
         {
-            _context = context;
+            _manager = new AdvertisementManager(context,HttpContext, User);
         }
 
         // GET: api/Advertisements
         [HttpGet]
         public IEnumerable<Advertisement> GetAdvertisement()
         {
-            return _context.Advertisement;
+            return _manager.GetAdvertisements();
         }
 
         // GET: api/Advertisements/5
@@ -37,7 +38,7 @@ namespace CCAMPServer.Controllers
                 return BadRequest(ModelState);
             }
 
-            var advertisement = await _context.Advertisement.FindAsync(id);
+            var advertisement = await _manager.GetAdvertisementById(id);
 
             if (advertisement == null)
             {
@@ -61,24 +62,8 @@ namespace CCAMPServer.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(advertisement).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AdvertisementExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+            await _manager.SetAdvertisementState(id, advertisement);
             return NoContent();
         }
 
@@ -91,8 +76,7 @@ namespace CCAMPServer.Controllers
                 return BadRequest(ModelState);
             }
 
-            _context.Advertisement.Add(advertisement);
-            await _context.SaveChangesAsync();
+            await _manager.AddAdvertisement(advertisement);
 
             return CreatedAtAction("GetAdvertisement", new { id = advertisement.Id }, advertisement);
         }
@@ -106,21 +90,14 @@ namespace CCAMPServer.Controllers
                 return BadRequest(ModelState);
             }
 
-            var advertisement = await _context.Advertisement.FindAsync(id);
+            var advertisement = await _manager.GetAdvertisementById(id);
             if (advertisement == null)
             {
                 return NotFound();
             }
 
-            _context.Advertisement.Remove(advertisement);
-            await _context.SaveChangesAsync();
-
+            await _manager.DeleteAdvertisement(advertisement);
             return Ok(advertisement);
-        }
-
-        private bool AdvertisementExists(int id)
-        {
-            return _context.Advertisement.Any(e => e.Id == id);
         }
     }
 }

@@ -88,7 +88,7 @@ namespace CCAMPServer.Controllers
 
             try
             {
-                await _manager.SetContentCreatorState(id, deal);
+                await _manager.SetDealState(id, deal);
             }
             catch (Exception exception)
             {

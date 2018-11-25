@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CCAMPServer.Data;
 using CCAMPServerModel.Models;
+using CCAMPServer.Classes;
 
 namespace CCAMPServer.Controllers
 {
@@ -14,18 +15,18 @@ namespace CCAMPServer.Controllers
     [ApiController]
     public class CampaignsController : ControllerBase
     {
-        private readonly TransactionDBContext _context;
+        private readonly CampaignsManager _manager;
 
         public CampaignsController(TransactionDBContext context)
         {
-            _context = context;
+            _manager = new CampaignsManager(context, HttpContext, User);
         }
 
         // GET: api/Campaigns
         [HttpGet]
         public IEnumerable<Campaign> GetCampaign()
         {
-            return _context.Campaign;
+            return _manager.GetCampaigns();
         }
 
         // GET: api/Campaigns/5
@@ -37,7 +38,7 @@ namespace CCAMPServer.Controllers
                 return BadRequest(ModelState);
             }
 
-            var campaign = await _context.Campaign.FindAsync(id);
+            var campaign = await _manager.GetCampaignById(id);
 
             if (campaign == null)
             {
@@ -61,23 +62,7 @@ namespace CCAMPServer.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(campaign).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CampaignExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _manager.SetCampaignState(id,campaign);
 
             return NoContent();
         }
@@ -91,9 +76,7 @@ namespace CCAMPServer.Controllers
                 return BadRequest(ModelState);
             }
 
-            _context.Campaign.Add(campaign);
-            await _context.SaveChangesAsync();
-
+            await _manager.AddCampaign(campaign);
             return CreatedAtAction("GetCampaign", new { id = campaign.Id }, campaign);
         }
 
@@ -106,21 +89,15 @@ namespace CCAMPServer.Controllers
                 return BadRequest(ModelState);
             }
 
-            var campaign = await _context.Campaign.FindAsync(id);
+            var campaign = await _manager.GetCampaignById(id);
             if (campaign == null)
             {
                 return NotFound();
             }
 
-            _context.Campaign.Remove(campaign);
-            await _context.SaveChangesAsync();
+            await _manager.DeleteCampaign(campaign);
 
             return Ok(campaign);
-        }
-
-        private bool CampaignExists(int id)
-        {
-            return _context.Campaign.Any(e => e.Id == id);
         }
     }
 }

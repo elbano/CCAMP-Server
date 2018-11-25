@@ -54,7 +54,7 @@ namespace CCAMPServer.Classes
             }
         }
 
-        public async Task SetContentCreatorState(int id, Deal deal)
+        public async Task SetDealState(int id, Deal deal)
         {
             try
             {

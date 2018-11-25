@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
+﻿using CCAMPServer.Classes;
 using CCAMPServer.Data;
 using CCAMPServerModel.Models;
-using CCAMPServerModel.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Serilog;
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
+
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -21,35 +19,30 @@ namespace CCAMPServer.Controllers
     public class ChannelController : ControllerBase
     {
         private static ILogger log { get; } = ApplicationLogging.Logger.ForContext<ChannelController>();
-        private readonly TransactionDBContext _context;
+        private readonly ChannelManager _manager;
 
         public ChannelController(TransactionDBContext context)
         {
-            _context = context;
+            _manager = new ChannelManager(context,HttpContext, User);
         }
 
         // GET: api/Channels
         [HttpGet, AllowAnonymous]
         public IEnumerable<Channel> GetChannel()
         {
-            // Debug line, this should have the 'sub' property info that is the user id in our auth0 app in https://ccampapi.auth0.com/
-            var authToken = AuthHelper.GetTokenUserId(User);
-
-            return _context.Channel;
+            return _manager.GetChannels();
         }
 
         // GET: api/Channels/5
         [HttpGet("{id}"), AllowAnonymous]
         public async Task<IActionResult> GetChannel([FromRoute] int id)
         {
-            var authToken = AuthHelper.GetTokenUserId(User);
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var channel = await _context.Channel.FindAsync(id);
+            var channel = await _manager.GetChannelById(id);
 
             if (channel == null)
             {
@@ -61,11 +54,9 @@ namespace CCAMPServer.Controllers
 
         // GET: api/Channels/5
         [HttpGet("keys={searchString}"), AllowAnonymous]
-        public IActionResult GetChannelKeyWordSearch(String searchString)
+        public IActionResult GetChannelKeyWordSearch(string searchString)
         {
-            var jsonResult = new JsonResult("");
-
-            string[] searchTerms = searchString.Split(' ');
+            JsonResult jsonResult = null;
 
             if (!ModelState.IsValid)
             {
@@ -74,16 +65,14 @@ namespace CCAMPServer.Controllers
 
             try
             {
-                var channelList = _context.Channel.Where(x => x.KeyWords.ContainsAny(searchTerms)).ToList();
-                //var channelList = _context.Channel.Where(x => x.KeyWords.Contains(searchString)).ToList();
+                jsonResult = _manager.GetChannelsByKeyWord(searchString);
 
-                if (channelList == null)
+                if (jsonResult == null)
                 {
                     return NotFound();
                 }
                 else
                 {
-                    jsonResult = new JsonResult(channelList, ApplicationJsonSerializerSettings.Settings);
                     jsonResult.StatusCode = (int)HttpStatusCode.OK;
                 }
 
@@ -110,23 +99,7 @@ namespace CCAMPServer.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(channel).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ChannelExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _manager.SetChannelState(id, channel);
 
             return NoContent();
         }
@@ -140,9 +113,7 @@ namespace CCAMPServer.Controllers
                 return BadRequest(ModelState);
             }
 
-            _context.Channel.Add(channel);
-            await _context.SaveChangesAsync();
-
+            await _manager.AddChannel(channel);
             return CreatedAtAction("GetChannel", new { id = channel.Id }, channel);
         }
 
@@ -155,21 +126,15 @@ namespace CCAMPServer.Controllers
                 return BadRequest(ModelState);
             }
 
-            var channel = await _context.Channel.FindAsync(id);
+            var channel = await _manager.GetChannelById(id);
             if (channel == null)
             {
                 return NotFound();
             }
 
-            _context.Channel.Remove(channel);
-            await _context.SaveChangesAsync();
+            await _manager.DeleteChannel(channel);
 
             return Ok(channel);
-        }
-
-        private bool ChannelExists(int id)
-        {
-            return _context.Channel.Any(e => e.Id == id);
         }
     }
 }

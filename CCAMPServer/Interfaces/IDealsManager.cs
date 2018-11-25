@@ -12,6 +12,6 @@ namespace CCAMPServer.Classes
         Task DeleteDealById(int id);
         Task<Deal> GetDealById(int id);
         JsonResult GetUserDeals(int status);
-        Task SetContentCreatorState(int id, Deal deal);
+        Task SetDealState(int id, Deal deal);
     }
 }
