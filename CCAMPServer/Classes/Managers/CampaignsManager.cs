@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace CCAMPServer.Classes
 {
-    public class CampaignsManager : BaseManager, ICampaignsManager
+    public class CampaignsManager : BaseManager//, ICampaignsManager
     {
         #region Constructor
 
@@ -42,7 +42,7 @@ namespace CCAMPServer.Classes
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CampaignExists(id))
+                if (!CampaignExists<Campaign>(id))
                 {
                     return;
                 }
@@ -74,7 +74,7 @@ namespace CCAMPServer.Classes
             await _context.SaveChangesAsync();
         }
 
-        public bool CampaignExists(int id)
+        public bool CampaignExists<T>(int id)
         {
             return _context.Campaign.Any(e => e.Id == id);
         }

@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using CCAMPServer.Classes;
-using System.Net.Http;
-using Newtonsoft.Json;
+﻿using CCAMPServer.Classes;
+using CCAMPServer.Data;
+using CCAMPServerModel.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Serilog;
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace CCAMPServer.Controllers
 {
@@ -14,26 +15,27 @@ namespace CCAMPServer.Controllers
     [ApiController]
     public class SearchController : Controller
     {
+        private readonly SearchManager _manager;
+
+        public SearchController(TransactionDBContext context)
+        {
+            _manager = new SearchManager(context, HttpContext, User);
+        }
+
         [HttpPost]
         public string Search([FromBody]SearchParameters queryParams )
         {
             if (string.IsNullOrWhiteSpace(queryParams.ToString()))
                 return null;
 
-            using (var client = new HttpClient())
-            {
-                var response = client.GetAsync(CommonFunctions.FormatSearchQuery(queryParams.ToString()));
-                var responseContent = response.Result.Content.ReadAsStringAsync();
-
-                return responseContent.Result.ToString();
-            }
+            return _manager.SearchByQueryParams(queryParams.ToString());
 
         }
 
         [HttpGet("GetSearchParameters"), AllowAnonymous]
         public string GetSearchParameters()
         {
-            return JsonConvert.SerializeObject(new SearchQueryParameters(), Formatting.Indented, new ConverterClassDefToJSON(typeof(SearchQueryParameters)));
+            return _manager.GetSearchParameters();
         }
 
     }

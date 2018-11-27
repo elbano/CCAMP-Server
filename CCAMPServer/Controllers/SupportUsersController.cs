@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using CCAMPServer.Classes;
 using CCAMPServer.Data;
 using CCAMPServerModel.Models;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CCAMPServer.Controllers
 {
@@ -14,18 +11,18 @@ namespace CCAMPServer.Controllers
     [ApiController]
     public class SupportUsersController : ControllerBase
     {
-        private readonly TransactionDBContext _context;
+        private readonly SupportUserManager _manager;
 
         public SupportUsersController(TransactionDBContext context)
         {
-            _context = context;
+            _manager = new SupportUserManager(context, HttpContext, User);
         }
 
         // GET: api/SupportUsers
         [HttpGet]
         public IEnumerable<SupportUser> GetSupportUser()
         {
-            return _context.SupportUser;
+            return _manager.GetSupportUsers();
         }
 
         // GET: api/SupportUsers/5
@@ -37,7 +34,7 @@ namespace CCAMPServer.Controllers
                 return BadRequest(ModelState);
             }
 
-            var supportUser = await _context.SupportUser.FindAsync(id);
+            var supportUser = await _manager.GetSupportUserById(id);
 
             if (supportUser == null)
             {
@@ -61,23 +58,7 @@ namespace CCAMPServer.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(supportUser).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!SupportUserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _manager.SetSupportUserState(id, supportUser);
 
             return NoContent();
         }
@@ -91,8 +72,7 @@ namespace CCAMPServer.Controllers
                 return BadRequest(ModelState);
             }
 
-            _context.SupportUser.Add(supportUser);
-            await _context.SaveChangesAsync();
+            await _manager.AddSupportUser(supportUser);
 
             return CreatedAtAction("GetSupportUser", new { id = supportUser.Id }, supportUser);
         }
@@ -106,21 +86,15 @@ namespace CCAMPServer.Controllers
                 return BadRequest(ModelState);
             }
 
-            var supportUser = await _context.SupportUser.FindAsync(id);
+            var supportUser = await _manager.GetSupportUserById(id);
             if (supportUser == null)
             {
                 return NotFound();
             }
 
-            _context.SupportUser.Remove(supportUser);
-            await _context.SaveChangesAsync();
+            await _manager.DeleteSupportUser(supportUser);
 
             return Ok(supportUser);
-        }
-
-        private bool SupportUserExists(int id)
-        {
-            return _context.SupportUser.Any(e => e.Id == id);
         }
     }
 }

@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using CCAMPServer.Classes;
 using CCAMPServer.Data;
 using CCAMPServerModel.Models;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CCAMPServer.Controllers
 {
@@ -14,18 +11,18 @@ namespace CCAMPServer.Controllers
     [ApiController]
     public class SponsorsController : ControllerBase
     {
-        private readonly TransactionDBContext _context;
+        private readonly SponsorsManager _manager;
 
         public SponsorsController(TransactionDBContext context)
         {
-            _context = context;
+            _manager = new SponsorsManager(context, HttpContext, User);
         }
 
         // GET: api/Sponsors
         [HttpGet]
         public IEnumerable<Sponsor> GetSponsor()
         {
-            return _context.Sponsor;
+            return _manager.GetSponsors();
         }
 
         // GET: api/Sponsors/5
@@ -37,7 +34,7 @@ namespace CCAMPServer.Controllers
                 return BadRequest(ModelState);
             }
 
-            var sponsor = await _context.Sponsor.FindAsync(id);
+            var sponsor = await _manager.GetSponsorById(id);
 
             if (sponsor == null)
             {
@@ -61,23 +58,7 @@ namespace CCAMPServer.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(sponsor).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!SponsorExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _manager.SetSponsorState(id, sponsor);
 
             return NoContent();
         }
@@ -91,8 +72,7 @@ namespace CCAMPServer.Controllers
                 return BadRequest(ModelState);
             }
 
-            _context.Sponsor.Add(sponsor);
-            await _context.SaveChangesAsync();
+            await _manager.AddSponsor(sponsor);
 
             return CreatedAtAction("GetSponsor", new { id = sponsor.Id }, sponsor);
         }
@@ -106,21 +86,15 @@ namespace CCAMPServer.Controllers
                 return BadRequest(ModelState);
             }
 
-            var sponsor = await _context.Sponsor.FindAsync(id);
+            var sponsor = await _manager.GetSponsorById(id);
             if (sponsor == null)
             {
                 return NotFound();
             }
 
-            _context.Sponsor.Remove(sponsor);
-            await _context.SaveChangesAsync();
+            await _manager.DeleteSponsor(sponsor);
 
             return Ok(sponsor);
-        }
-
-        private bool SponsorExists(int id)
-        {
-            return _context.Sponsor.Any(e => e.Id == id);
         }
     }
 }

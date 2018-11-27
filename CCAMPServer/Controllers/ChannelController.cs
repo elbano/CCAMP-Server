@@ -30,6 +30,8 @@ namespace CCAMPServer.Controllers
         [HttpGet, AllowAnonymous]
         public IEnumerable<Channel> GetChannel()
         {
+
+
             return _manager.GetChannels();
         }
 
