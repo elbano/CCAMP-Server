@@ -65,15 +65,15 @@ namespace CCAMPServer.Data
         {
             try
             {
-                var contentCreatorList = GetSetupRecord<ContentCreator>(jsonFile);
+                var contentCreatorList = GetSetupRecord<User>(jsonFile);
 
                 foreach (var newContentCreator in contentCreatorList)
                 {
-                    var contentCreator = dBContext.ContentCreator.FirstOrDefault(x => x.Guid.Equals(newContentCreator.Guid));
+                    var contentCreator = dBContext.User.FirstOrDefault(x => x.Guid.Equals(newContentCreator.Guid));
 
                     if (contentCreator == null)
                     {                       
-                        dBContext.ContentCreator.Add(newContentCreator);
+                        dBContext.User.Add(newContentCreator);
                     }
                     else
                     {
@@ -98,15 +98,15 @@ namespace CCAMPServer.Data
         {
             try
             {
-                var sponsorList = GetSetupRecord<Sponsor>(jsonFile);
+                var sponsorList = GetSetupRecord<User>(jsonFile);
 
                 foreach (var newSponsor in sponsorList)
                 {
-                    var sponsor = dBContext.Sponsor.FirstOrDefault(x => x.Guid.Equals(newSponsor.Guid));
+                    var sponsor = dBContext.User.FirstOrDefault(x => x.Guid.Equals(newSponsor.Guid));
 
                     if (sponsor == null)
                     {
-                        dBContext.Sponsor.Add(newSponsor);
+                        dBContext.User.Add(newSponsor);
                     }
                     else
                     {
@@ -136,8 +136,8 @@ namespace CCAMPServer.Data
                 foreach (var newCampaign in campaignList)
                 {
                     var campaign = dBContext.Campaign.FirstOrDefault(x => x.Guid.Equals(newCampaign.Guid));
-                    var sponsor = dBContext.Sponsor.FirstOrDefault(x => x.Guid.Equals(newCampaign.Sponsor.Guid));
-                    if (sponsor != null) newCampaign.Sponsor = sponsor;
+                    var sponsor = dBContext.User.FirstOrDefault(x => x.Guid.Equals(newCampaign.SponsorUser.Guid));
+                    if (sponsor != null) newCampaign.SponsorUser = sponsor;
 
                     if (campaign == null)
                     {
@@ -171,8 +171,8 @@ namespace CCAMPServer.Data
                 foreach (var newChannel in channelList)
                 {
                     var channel = dBContext.Channel.FirstOrDefault(x => x.Guid.Equals(newChannel.Guid));
-                    var contentCreator = dBContext.ContentCreator.FirstOrDefault(x => x.Guid.Equals(newChannel.ContentCreator.Guid));
-                    if (contentCreator != null) newChannel.ContentCreator = contentCreator;
+                    var contentCreator = dBContext.User.FirstOrDefault(x => x.Guid.Equals(newChannel.ContentCreatorUser.Guid));
+                    if (contentCreator != null) newChannel.ContentCreatorUser = contentCreator;
 
                     if (channel == null)
                     {

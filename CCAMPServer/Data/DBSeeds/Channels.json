@@ -3,7 +3,7 @@
     "Guid": "19055265-584A-4F00-9278-8B1483ADA73D",
     "Name": "channel name",
     "CreationDate": "2018-10-18T16:00:00.000000",
-    "ContentCreator": {
+    "ContentCreatorUser": {
       "Guid": "a686d261-636d-4bf5-9bf2-d3dd1d6f3f53"
     },
     "ContentList": [],

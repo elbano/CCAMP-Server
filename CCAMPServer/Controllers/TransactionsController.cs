@@ -13,7 +13,7 @@ namespace CCAMPServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TransactionsController : ControllerBase
+    public class TransactionsController : Controller
     {
         private static ILogger log { get; } = ApplicationLogging.Logger.ForContext<TransactionsController>();
 

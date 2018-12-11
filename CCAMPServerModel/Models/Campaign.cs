@@ -23,8 +23,8 @@ namespace CCAMPServerModel.Models
         
         public DateTime EndDate { get; set; }
 
-        [ForeignKey("SponsorId")]
-        public Sponsor Sponsor { get; set; }
+        //[ForeignKey("UserId")]
+        public User SponsorUser { get; set; }
 
         public List<Advertisement> AdvertisementList { get; set; }
 

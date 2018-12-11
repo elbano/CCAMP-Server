@@ -12,7 +12,7 @@ namespace CCAMPServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CampaignsController : ControllerBase
+    public class CampaignsController : Controller
     {
         private readonly TransactionDBContext _context;
 

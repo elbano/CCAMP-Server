@@ -18,7 +18,7 @@ namespace CCAMPServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ChannelController : ControllerBase
+    public class ChannelController : Controller
     {
         private static ILogger log { get; } = ApplicationLogging.Logger.ForContext<ChannelController>();
         private readonly TransactionDBContext _context;

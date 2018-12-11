@@ -15,7 +15,7 @@ namespace CCAMPServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DealsController : ControllerBase
+    public class DealsController : Controller
     {
         private static ILogger log { get; } = ApplicationLogging.Logger.ForContext<DealsController>();
         private readonly TransactionDBContext _context;
@@ -39,8 +39,8 @@ namespace CCAMPServer.Controllers
 
             try
             {
-                var dealList = _context.Deal.Include(d => d.Campaign).ThenInclude(x => x.Sponsor).
-                    Where(x => x.Channel.ContentCreator.AuthUserId.
+                var dealList = _context.Deal.Include(d => d.Campaign).ThenInclude(x => x.SponsorUser).
+                    Where(x => x.Channel.ContentCreatorUser.AuthUserId.
                         Equals(authToken, StringComparison.InvariantCultureIgnoreCase)).ToList();
 
                 if (dealList == null)

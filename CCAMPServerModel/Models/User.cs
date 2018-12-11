@@ -14,8 +14,18 @@ namespace CCAMPServerModel.Models
 
     public class User
     {
+        [Key]
+        [Required]
+        public int Id { get; set; }
+
         [Required]
         public Guid Guid { get; set; }
+
+        [Required]
+        public String Name { get; set; }
+
+        [Required]
+        public String LastName { get; set; }
 
         [Required]
         public String Email { get; set; }
@@ -31,5 +41,11 @@ namespace CCAMPServerModel.Models
 
         [Required]
         public DateTime CreationDate { get; set; }
+
+        public String CompanyName { get; set; }
+
+        public List<Campaign> CampaigntList { get; set; }
+
+        public List<Channel> ChannelList { get; set; }
     }
 }

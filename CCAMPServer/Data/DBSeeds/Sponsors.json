@@ -7,7 +7,9 @@
     "UserName": "NikeUser",
     "AuthUserId": "NONE",
     "Status": "sm_Active",
-    "CreationDate": "2018-10-18T16:00:00.000000"
+    "CreationDate": "2018-10-18T16:00:00.000000",
+    "Name": "Contact",
+    "LastName": "Contact"
   },
   {
     "Guid": "6D90C713-1E46-4AB8-BFC3-B708B13CD594",
@@ -17,7 +19,9 @@
     "UserName": "DellUser",
     "AuthUserId": "NONE",
     "Status": "sm_Active",
-    "CreationDate": "2018-10-18T16:00:00.000000"
+    "CreationDate": "2018-10-18T16:00:00.000000",
+    "Name": "Contact",
+    "LastName": "Contact"
   },
   {
     "Guid": "9547D169-35DF-4AAA-A8F8-77BA9B52900C",
@@ -27,7 +31,9 @@
     "UserName": "NetflixUser",
     "AuthUserId": "NONE",
     "Status": "sm_Active",
-    "CreationDate": "2018-10-18T16:00:00.000000"
+    "CreationDate": "2018-10-18T16:00:00.000000",
+    "Name": "Contact",
+    "LastName": "Contact"
   },
   {
     "Guid": "AA6961CD-79D2-4755-BDDC-4E8F38367538",
@@ -37,7 +43,9 @@
     "UserName": "GatoradeUser",
     "AuthUserId": "NONE",
     "Status": "sm_Active",
-    "CreationDate": "2018-10-18T16:00:00.000000"
+    "CreationDate": "2018-10-18T16:00:00.000000",
+    "Name": "Contact",
+    "LastName": "Contact"
   },
   {
     "Guid": "09A13EA0-2269-4185-BD2C-F5BD31564FB8",
@@ -47,6 +55,8 @@
     "UserName": "BeatsUser",
     "AuthUserId": "NONE",
     "Status": "sm_Active",
-    "CreationDate": "2018-10-18T16:00:00.000000"
+    "CreationDate": "2018-10-18T16:00:00.000000",
+    "Name": "Contact",
+    "LastName": "Contact"
   }
 ]

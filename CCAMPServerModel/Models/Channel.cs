@@ -20,8 +20,8 @@ namespace CCAMPServerModel.Models
         [Required]
         public DateTime CreationDate { get; set; }
 
-        [ForeignKey("ContentCreatorId")]
-        public ContentCreator ContentCreator { get; set; }
+        //[ForeignKey("UserId")]
+        public User ContentCreatorUser { get; set; }
 
         public List<Content> ContentList { get; set; }
 

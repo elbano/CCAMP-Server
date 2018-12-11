@@ -22,12 +22,6 @@ namespace CCAMPServer.Controllers
     [ApiController]
     public class TokenController : Controller
     {
-        private readonly TokenDBContext _context;
-
-        public TokenController(TokenDBContext context)
-        {
-            _context = context;
-        }
         
         [HttpPost("token"), AllowAnonymous]
         public string GetToken(TokenRequest request)
@@ -39,7 +33,7 @@ namespace CCAMPServer.Controllers
         [HttpGet("result"), AllowAnonymous]
         public async Task<string> GetResultAsync()
         {
-            await CommonFunctions.GetTokenResponseAsync(Request, HttpContext, _context);
+            //await CommonFunctions.GetTokenResponseAsync(Request, HttpContext, _context);
 
             return "hi";
         }

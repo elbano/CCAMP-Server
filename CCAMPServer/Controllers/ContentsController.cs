@@ -10,7 +10,7 @@ namespace CCAMPServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ContentsController : ControllerBase
+    public class ContentsController : Controller
     {
         private readonly TransactionDBContext _context;
 
