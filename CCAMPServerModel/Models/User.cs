@@ -41,6 +41,8 @@ namespace CCAMPServerModel.Models
 
         [Required]
         public DateTime CreationDate { get; set; }
+        
+        public String YoutubeToken { get; set; }
 
         public String CompanyName { get; set; }
 

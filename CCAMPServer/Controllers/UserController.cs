@@ -1,46 +1,68 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using CCAMPServer.Classes;
+using CCAMPServer.Data;
+using CCAMPServerModel.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
+using Serilog;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace CCAMPServer.Controllers
 {
     [Route("api/[controller]")]
+    [ApiController]
     public class UserController : Controller
     {
-        // GET: api/<controller>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
+        private static ILogger log { get; } = ApplicationLogging.Logger.ForContext<DealsController>();
+        private readonly TransactionDBContext _context;
 
-        // GET api/<controller>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        public UserController(TransactionDBContext context)
         {
-            return "value";
-        }
+            _context = context;
+        }       
 
-        // POST api/<controller>
-        [HttpPost]
-        public void Post([FromBody]string value)
+        // POST: api/Users
+        [HttpPost, AllowAnonymous]
+        public void PostUserAsync([FromBody]JObject userJson)
         {
-        }
+            var authToken = AuthHelper.getTokenUserId(User);
 
-        // PUT api/<controller>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
+            try
+            {
+                var user = userJson.ToObject<User>();
 
-        // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+                var itExist = _context.User.Any(x => x.AuthUserId.Equals(authToken, StringComparison.InvariantCultureIgnoreCase));
+
+                if (!itExist)
+                {
+                    //INSERT USER HERE, GET EMAIL FROM AUTH TOKEN BASED ON FRAN IMPLEMENTATION
+                    user.AuthUserId = authToken;
+                    user.Guid = Guid.NewGuid();
+                    user.Status = EStatusMode.sm_Active;
+                    user.CreationDate = DateTime.Now;
+
+                    _context.User.Add(user);
+                    _context.SaveChanges();
+                    Debug.WriteLine("REGISTER");
+                }
+                else
+                {
+                    Debug.WriteLine("LOGIN - TEMPORARY ELSE, NO USE FOR THIS YET.....");
+                }
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception);
+                log.Warning(exception, exception.Message);
+            }
         }
     }
 }
+
